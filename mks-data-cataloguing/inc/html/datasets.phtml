@@ -1,0 +1,42 @@
+<?php get_header(); ?>
+<?php 
+/**
+ * Prepare Search Query Arguments
+ */
+$paged = $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+$args=array(
+	'post_type' => 'mksdc-datasets',
+		'post_status' => 'publish',
+		'posts_per_page' => -1,
+		'paged' => $paged,
+		'ignore_sticky_posts'=> 1
+);
+// Search string
+if($txt = $this->itemOf('params', 'txt')){
+	$args['s'] = $txt;
+}
+// Categories
+$args['category__in'] = $this->itemOf('params', 'cat', array());
+$args['category_name'] = $this->itemOf('params', 'category_name', array());
+// Tags
+$args['tag__in'] = $this->itemOf('params', 'tag', array());
+// Avoid private datasets
+#$db = $this->get('db');
+#$privateUUIDs = $db->listPrivateDatasetUUIDs();
+#$args['meta_query'] = array(
+#	array(
+#		'key' => MKSDC_DataAccess::toKey('uuid'),
+#		'value' => $privateUUIDs,
+#		'compare' => 'NOT IN'
+#	)
+#);
+
+?>
+<form id="mksdc_sf" method="get" action="<?php print MKSDC_Plugin::getPageFromTemplate(MKSDC_Plugin::DATA_CATALOGUE_TMPL); ?>">
+<?php if(isset($_GET['page_id'])): ?>
+<input type="hidden" name="page_id" value="<?php print $_GET['page_id'];?>"/>
+<?php endif; ?>
+<?php $this->partial('data-catalogue-aside', array('args' => $args)); ?>
+<?php $this->partial('data-catalogue-results', array('args'=> $args, 'db' => MKSDC_DataAccess::instance())); ?>
+</form>
+<?php get_footer(); ?>

@@ -1,0 +1,60 @@
+<?php $args = $this->get('args'); ?>
+<div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
+<section role="main">
+<article id="post-<?php print get_the_ID(); ?>" class="post-<?php print get_the_ID(); ?> page type-page status-publish hentry">
+<div class="alignright"></div>
+<!--<header class="header">
+<h1 class="entry-title"></h1>
+</header>-->
+<section class="entry-content">
+
+
+<?php
+	global $trouble;
+	if (isset($trouble) && $trouble === true) {
+		echo 'Sorry, there seems to be a temporary problem.  Please try again later.';
+	} else {
+		$datasets = array();
+		$db = $this->get('db', NULL);
+		if($db){
+			$my_query = new WP_Query($args);
+			if ($my_query->have_posts()) :
+			?>
+<h1>Found <span id="mksdc_count">...</span> Datasets</h1>
+<input name="txt" value="<?php print @$args['s'];?>" placeholder="search&hellip;"  type="search">			
+<ul id="mksdc_posts">
+			<?php 
+				while ($my_query->have_posts()):
+					$my_query->the_post();
+					$tags = get_the_tags();
+					?>
+<li>
+	<a href="<?php print get_permalink(get_the_ID()); ?>">
+		<h3><?php
+		foreach(get_the_category() as $cat): if(strlen($cat->slug) != 1) continue;
+		?><span class="icon" title="<?php print $cat->name; ?>" data-icon="<?php print $cat->slug;?>"></span><?php
+		 endforeach; ?><?php print get_the_title() ?></h3>
+		<p><?php print get_the_excerpt();?></p>
+	</a>
+</li>
+					<?php 
+				endwhile;
+?></ul><?php 
+			else:
+				echo '<h1>No datasets found.</h1>';
+			endif;
+			wp_reset_postdata();
+		}else{
+			MKSDC_Plugin::logErr('Missing $db in data-catalogue.phtml');
+		}
+	}
+?>
+<div class="entry-links"></div>
+</section>
+</article>
+</section>
+</div>
+
+<script type="text/javascript">
+		jQuery('#mksdc_count').html(jQuery('#mksdc_posts > li').length);
+</script>

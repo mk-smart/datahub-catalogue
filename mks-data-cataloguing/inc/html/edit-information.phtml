@@ -1,0 +1,79 @@
+<!-- Title -->
+<div class="mksdc_field row">
+	<?php $this->partial('field-text', array(
+		'name' => 'mksdc_nds_title',
+		'id' => 'mksdc_nds_title',
+		'value' => $this->get('mksdc_nds_title',''),
+		'placeholder' => '',
+		'class' => 'mksdc_field_text mksdc_nds col-lg-9 col-md-9 col-sm-8 col-xs-12 ' ,
+		'label-class' => 'col-lg-3 col-md-3 col-sm-4 col-xs-12',
+		'label' => 'Title', 
+		'errors' => $this->itemOf('_errors','mksdc_nds_title[0]', array())));?>
+</div>
+
+<!-- Description -->
+<div class="mksdc_field">
+	<?php $this->partial('field-rich-textarea', array(
+		'name' => 'mksdc_nds_description',
+		'id' => 'mksdc_nds_description',
+		'value' => $this->get('mksdc_nds_description',''),
+		'placeholder' => '',
+		'settings' => array('media_buttons'=>false, 'textarea_rows' => 5),
+		//'class' => 'mksdc_field_text mksdc_nds col-lg-9 col-md-9 col-sm-8 col-xs-12',
+		//'label-class' => 'col-lg-3 col-md-3 col-sm-4 col-xs-12',
+		'label' => 'Description',
+		'errors' => $this->itemOf('_errors','mksdc_nds_description[0]', array())
+	)); ?>
+</div>
+<!-- Category -->
+<div class="mksdc_field row">
+	<?php $this->partial('field-tag-it', array(
+		'name' => 'mksdc_nds_category[]',
+		'id' => 'mksdc_nds_category',
+		'multiple' => 'multiple',
+		'class' => 'mksdc_field_text mksdc_nds col-lg-9 col-md-9 col-sm-8 col-xs-12',
+		'label-class' => 'col-lg-3 col-md-3 col-sm-4 col-xs-12',
+		'label' => 'Categories',
+		'required' => 'true',
+		'selected' => $this->get('mksdc_nds_category', array()),
+		'errors' => $this->itemOf('_errors','mksdc_nds_category', array()),
+		'categories' => get_categories(array('type' => 'dataset', 'hide_empty' => 0)) // the categories of the post
+)); ?>
+</div>
+
+<!-- Tags -->
+<div class="mksdc_field row">
+	<?php
+$this->partial('field-tag-it', array(
+		'name' => 'mksdc_nds_tags[]',
+		'id' => 'mksdc_nds_tags',
+		'value' => $this->get('mksdc_nds_tags',''),
+		'data' => array('role'=>"tagsinput"),
+		'class' => 'mksdc_field_text col-lg-9 col-md-9 col-sm-8 col-xs-12',
+		'tag-it-id' => 'name',
+		'tag-it-name' => 'name',
+		'label-class' => 'col-lg-3 col-md-3 col-sm-4 col-xs-12',
+		'label' => 'Tags',
+		'required' => 'true',
+		'multiple' => 'multiple',
+		'select2' => '{tags: true}',
+		'selected' => $this->get('mksdc_nds_tags', array()),
+		'categories' => get_tags(array('type' => 'dataset', 'hide_empty' => 1)),
+		'errors' => $this->itemOf('_errors','mksdc_nds_tags', array())
+)); ?>
+</div>
+							
+<!-- Data formats -->
+<div class="mksdc_field row ">
+	<?php $this->partial('field-tag-it', array(
+			'name' => 'mksdc_nds_formats[]',
+			'id' => 'mksdc_nds_formats',
+			'class' => 'mksdc_field_text mksdc_nds col-lg-9 col-md-9 col-sm-8 col-xs-12',
+			'label-class' => 'col-lg-3 col-md-3 col-sm-4 col-xs-12',
+			'label' => 'Formats',
+			'required' => 'true',
+			'multiple' => 'multiple',
+			'selected' => $this->get('mksdc_nds_formats', array()),
+			'categories' => get_terms(array('mksdc-dataformats')) // the categories of the post
+)); ?>
+</div>

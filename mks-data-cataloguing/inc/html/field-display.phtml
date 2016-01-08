@@ -1,0 +1,11 @@
+<?php if($this->has('label')): ?>
+<label for="<?php $this->spit('id'); ?>"
+<?php $this->spitAttrs(array('class','style') , 'label-'); ?>
+>
+	<?php $this->smushed('label'); ?>
+</label>
+<?php endif; ?>
+<span
+	id="<?php $this->spit('id'); ?>"
+	class="<?php $this->spit('class'); ?>"
+	style="<?php $this->spit('style'); ?>" ><?php $this->smushed('value'); ?></span>

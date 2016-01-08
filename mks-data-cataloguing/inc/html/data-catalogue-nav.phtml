@@ -1,0 +1,29 @@
+<nav class="row" style="margin-top:20px;margin-bottom:20px;">
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+		<?php
+		if (false) { // because we don't want to be confused by the claimed number of datasets!
+		?><span class="nowrap">
+			Found&nbsp;<?php
+								 $fp = $my_query->found_posts;
+								 print $fp;
+								 ?>&nbsp;dataset<?php
+																if ($fp != 1) print 's';
+																?>.</span><?php
+					 }
+					 if ($my_query->max_num_pages !== 0) {
+					 ?>
+		<span class="nowrap">
+			Page
+			<?php print $paged; ?>
+			of
+			<?php print $my_query->max_num_pages ?>.
+		</span><?php } ?>
+		<div class="btn-group btn-group-sm pull-right" role="group">
+			<button type="button" class="btn btn-info" onclick="expandOrCollapseAll(true)">Expand All</button>
+			<button type="button" class="btn btn-primary" onclick="expandOrCollapseAll(false)">Collapse All</button>
+		</div>
+		<span class="nowrap"><?php
+												 previous_posts_link( '&laquo; previous page', $my_query->max_num_pages);
+												 next_posts_link( 'next page &raquo;', $my_query->max_num_pages);
+												 ?></span></div>
+</nav>

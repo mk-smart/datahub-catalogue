@@ -1,0 +1,74 @@
+<!-- Owners -->
+<div class="mksdc_field row">
+	<?php $this->partial('field-tag-it', array(
+		'name' => 'mksdc_nds_owners[]',
+		'id' => 'mksdc_nds_owners',
+		'selected' => $this->get('mksdc_nds_owners', array()),
+		'categories' => get_terms(array('mksdc-dataowners')) ,
+		'tag-it-id' => 'name',
+		'placeholder' => '',
+		'multiple' => 'multiple',
+		'select2' => '{tags: true}',
+		'class' => 'mksdc_field_text col-lg-9 col-md-9 col-sm-8 col-xs-12',
+		'label-class' => 'col-lg-3 col-md-3 col-sm-4 col-xs-12',
+		'label' => 'Ownership', 'errors' => $this->itemOf('_errors','mksdc_nds_owners[0]', array())));?>
+</div>
+
+<!-- Source -->
+<div class="mksdc_field row">
+	<?php $this->partial('field-text', array(
+		'name' => 'mksdc_nds_source_link',
+		'id' => 'mksdc_nds_source_link',
+		'value' => $this->get('mksdc_nds_source_link'),
+		'placeholder' => '',
+		'description' => 'The link to a reference web site for the source of the data.',
+		'class' => 'mksdc_field_text mksdc_nds col-lg-9 col-md-9 col-sm-8 col-xs-12',
+		'label-class' => 'col-lg-3 col-md-3 col-sm-4 col-xs-12',
+		'label' => 'Source Website', 'errors' => $this->itemOf('_errors','mksdc_nds_source_link[0]', array()))); ?>
+</div>
+<div class="mksdc_field row">
+	<?php $this->partial('field-text', array(
+		'name' => 'mksdc_nds_source_label',
+		'id' => 'mksdc_nds_source_label',
+		'value' => $this->get('mksdc_nds_source_label'),
+		'placeholder' => '',
+		'description' => 'A short label for the link to the source of the dataset.',
+		'class' => 'mksdc_field_text mksdc_nds col-lg-9 col-md-9 col-sm-8 col-xs-12',
+		'label-class' => 'col-lg-3 col-md-3 col-sm-4 col-xs-12',
+		'label' => 'Source Website Name', 'errors' => $this->itemOf('_errors','mksdc_nds_source_label[0]', array()))); ?>
+</div>
+
+<!-- Redistribution Policies -->
+<div class="mksdc_field row">
+	<?php 
+	$db = MKSDC_DataAccess::instance();
+	$licenses = array();
+	foreach($db->getLicensesOfDatasetByPostId(get_the_ID()) as $l){
+		array_push($licenses, $l['id']);	
+	}
+	if(count($licenses) == 0){
+		array_push($licenses,0);
+	}
+	$this->partial('field-tag-it', array(
+		'name' => 'mksdc_nds_licence[]',
+		'id' => 'mksdc_nds_licence',
+		'multiple' => 'multiple',
+		'class' => 'mksdc_field_text mksdc_nds col-lg-9 col-md-9 col-sm-8 col-xs-12',
+		'label-class' => 'col-lg-3 col-md-3 col-sm-4 col-xs-12',
+		'label' => 'Licences',
+		'selected' => get_posts(array('post__in' => $licenses, 'post_type' => 'mksdc-policies')),
+		'categories' => get_posts(array('post_type' => 'mksdc-policies')) // the collection to pick from
+)); ?>
+</div>
+<!-- Attribution Statement -->
+<div class="mksdc_field row">
+	<?php $this->partial('field-textarea', array(
+		'name' => 'mksdc_nds_attribution',
+		'id' => 'mksdc_nds_attribution',
+		'value' => $this->get('mksdc_nds_attribution',''),
+		'placeholder' => '',
+		'description' => 'The attribution statement and/or instructions about if/how to attribute.',
+		'class' => 'mksdc_field_text mksdc_nds col-lg-9 col-md-9 col-sm-8 col-xs-12',
+		'label-class' => 'col-lg-3 col-md-3 col-sm-4 col-xs-12',
+		'label' => 'Attribution Statement', 'errors' => $this->itemOf('_errors','mksdc_nds_attribution[0]', array())));?>
+</div>

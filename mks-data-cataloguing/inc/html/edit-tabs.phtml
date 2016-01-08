@@ -1,0 +1,34 @@
+<ul class="nav nav-tabs" id="tabs" style="padding-left:25px;margin-left:0;">
+	<li class="active"><a href="#ds-info" data-toggle="tab"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>&nbsp;Information</a></li>
+	<li><a href="#ds-licence" data-toggle="tab"><span class="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span>&nbsp;Ownership and licencing</a></li>
+	<li><a href="#ds-upload" data-toggle="tab"><span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>&nbsp;Sources</a></li>
+	<?php /* Extend the Edit Dataset View with the 'dataset-edit-tab' extension */ ?>
+	<?php // Remember tab ids ?>
+	<?php foreach(MKSDC_Plugin::instance()->getExtensions('dataset-edit-tab') as $extension): ?>
+	<?php unset($v); ?>
+	<?php if(is_array(@$extension) && @is_object(@$extension[0])): 
+		$o = $extension[0];
+		$v = $o->$extension[1](); ?>
+	<?php elseif(function_exists($extension)):
+		$v = $extension(); ?>
+	<?php endif; ?>
+	<?php if($v): ?>
+		<li><a href="#ds-<?php print $v[0]?>" data-toggle="tab"><span class="glyphicon glyphicon-<?php print $v[2];?>" aria-hidden="true"></span>&nbsp;<?php print $v[1];?></a></li>
+	<?php endif;?>
+	<?php endforeach; ?>
+</ul>
+<script type="text/javascript">
+	function changeTab (e, next) {
+		var id = jQuery(e).parents('.tab-pane').attr('id');
+		var selector = "#tabs > li > a[href='#" + id + "']";
+		var tab = jQuery(selector)[0].parentNode;
+		if (next) tab = jQuery(tab).next();
+		else tab = jQuery(tab).prev();
+		tab = tab.find('a');
+		tab.click();
+	}
+	jQuery("ul.nav-tabs a").click(function (e) {
+		e.preventDefault();
+		jQuery(this).tab('show').blur();
+	});
+</script>

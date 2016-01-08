@@ -1,0 +1,72 @@
+<?php
+$licenses = $this->get('licences', array());
+$nbpolicies = count($licenses); //get_post_meta($post->ID, '_mksdc_nbpolicies_key', true );
+if(!$nbpolicies){
+	$nbpolicies = 1;
+}
+?>
+<div class="mksdc-field">
+<div id="mksdc_license_list">
+<?php 
+// Prepare options once for all
+$wpd = MKSDC_DataAccess::instance();
+$options = $wpd->getLicensesSelectOptions();
+for($i=1; $i<=$nbpolicies; $i++){
+	$selectedvalue = isset($licenses[$i-1]) ? $licenses[$i-1] : '';
+	$selectName = 'mksdc_license_' . $i . '_field';
+	echo '<div data-index="'.$i.'" class="mksdc_license_select" id="'.$selectName.'">';
+	echo '<select  placeholder="Select a policy or license here" name="'.$selectName.'">';
+	echo '<option value=""></option>';
+	foreach($options as $okey => $oval):
+	$selected = ($okey==$selectedvalue) ? 'selected="selected"' : '';
+	echo '<option '.$selected.' value="' . $okey . '">' . $oval . '</option>';
+	endforeach;
+	echo '</select>&nbsp;';
+	if($i>1 && $i==$nbpolicies){
+		echo '<a class="mksdc_action_link" onclick="MKSDC.removeLicense(this)" id="remove_policy" data-target="'.$selectName.'">remove</a>';
+	}
+	echo '</div>';
+}
+?></div>
+  <script>
+if(typeof MKSDC == 'undefined'){
+	MKSDC = {};
+}
+MKSDC.addLicense = function (){
+	var $ = jQuery;
+	// take the last input box and clone it
+  	var inputfield = $('#mksdc_license_list div.mksdc_license_select:last').clone();
+  	// hide the remove link from it
+  	$('#mksdc_license_list div.mksdc_license_select:last a.mksdc_action_link').hide();
+  	// new item id
+	var idx = (inputfield.data('index') + 1);
+  	// rewrite attributes
+  	inputfield.attr('data-index', idx);
+  	var newid = 'mksdc_license_' + idx + '_field';
+    inputfield.attr('id', newid);
+    inputfield.find("select").attr('name', newid);
+    inputfield.find("select").val('');
+  	// add remove link or rewrite target
+  	if(idx == 2){
+  		var removelink = $('&nbsp;<a class="mksdc_action_link" onClick="MKSDC.removeLicense(this)" id="remove_policy" data-target="'+newid+'">remove</a>');
+		inputfield.append(removelink);
+  	}else{
+		inputfield.find("a.mksdc_action_link").data('target', newid);
+	}
+  	// add item
+  	$('#mksdc_license_list').append(inputfield);
+}
+MKSDC.removeLicense = function (a){
+	var $ = jQuery;
+	var trgt = $(a).data('target');
+  	$('#'+trgt).detach();
+  	$('#mksdc_license_list div.mksdc_license_select:last a.mksdc_action_link').show();
+}
+  </script>
+<style>
+a.mksdc_action_link{
+	cursor: pointer;
+}
+</style>
+<div><a class="mksdc_action_link" id="add_another_policy" onclick="MKSDC.addLicense()">add another</a></div>
+</div>

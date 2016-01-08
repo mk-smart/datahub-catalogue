@@ -1,0 +1,15 @@
+<?php if($this->has('label')): ?>
+<label for="<?php $this->smushed('id'); ?>"
+<?php $this->spitAttrs(array('class','style') , 'label-'); ?>
+><?php $this->smushed('label'); ?>
+</label>
+<?php endif; ?>
+<textarea<?php $this->spitAttrs(array('name', 'id', 'class', 'style', 'placeholder')); ?> onblur="value=value.trim()"><?php $this->spit('value'); ?></textarea>
+<?php if($this->full('description')): ?>
+<p class="description col-lg-offset-3 col-md-offset-3 col-sm-offset-4 col-lg-9 col-md-9 col-sm-8 col-xs-12">
+	<?php $this->smushed('description'); ?>
+</p>
+<?php
+endif;
+$this->partial('field-error', array('errors' => $this->get('errors')));
+?>

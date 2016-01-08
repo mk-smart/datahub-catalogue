@@ -1,0 +1,8 @@
+<div class="wrap">
+<h2>Data Catalogue Settings</h2>
+<form method="post" action="options.php">
+<?php	settings_fields( 'mksdc-settings' ); ?>
+<?php   do_settings_sections( 'mksdc-settings' ); ?>
+<?php	submit_button('Save Changes'); ?>
+</form>
+</div>

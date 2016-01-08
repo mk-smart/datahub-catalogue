@@ -1,0 +1,134 @@
+<?php
+$services = $this->get('services', array());?>
+<div class="<?php print $this->get('class',''); ?>">
+<style>#mksdc_services_list .form-group .form-inline {margin-top:5px;}</style>
+<div class="btn-toolbar"><a class="mksdc_action_link btn btn-primary btn-flat btn-sm" id="add_another_service" onclick="MKSDC.addService()"> <span class="glyphicon glyphicon-plus"></span> Add Service</a></div>
+<div id="mksdc_services_list">
+<?php 
+// Existing services
+if(is_array($services))
+	foreach($services as $six => $service){
+	$title = @$service['title'];
+	$url = @$service['url'];
+	echo <<<BOX
+		<div class="mksdc_service_box" id="mksdc_service_box_$six" data-index="$six">
+		<hr/>
+		<div class="row form-group">
+			<label class="col-lg-3 col-md-3 col-sm-3 col-xs-12">Service Name</label>
+			<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">	
+				<input class="form-control" name="mksdc_services_field[$six][title]" value="$title" placeholder="name of the service" type="text">
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-lg-3 col-md-3 col-sm-3 col-xs-12">Base URL</label>
+			<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+				<input class="form-control" name="mksdc_services_field[$six][url]" value="$url" placeholder="URL of the service" type="text">
+			</div>
+		</div>
+BOX;
+
+?>
+	
+<div class="row form-group">
+	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><label>Displayed Actions: </label></div>
+	<div class="btn-toolbar col-lg-9 col-md-9 col-sm-9 col-xs-12"><a class="btn btn-flat btn-sm btn-sm btn-primary" id="add_another_service_action" onclick="MKSDC.addServiceAction(<?php print $six; ?>)"><span class="glyphicon glyphicon-plus"></span> Add Action</a></div>
+<?php		echo '<div class=" col-lg-offset-3 col-md-offset-3 col-sm-offset-3 col-lg-9 col-md-9 col-sm-9 col-xs-12 mksdc_service_actions_list" id="mksdc_service_'.$six.'_action_list" data-index="'.$six.'">';
+			// Add buttons
+			foreach(@$service['actions'] as $aix => $action){
+				$label = $action['label'];
+				$link = $action['link'];
+				$boxid = 'mksdc_service_' . $six . '_action_' . $aix;
+				echo <<<BOX
+				<div id="$boxid" class="form-inline mksdc_service_action" data-index="$aix">
+				<select class="form-control col-lg-3" name="mksdc_services_field[$six][actions][$aix][type]">
+BOX;
+				$types = array('primary'=>'Blue', 'success'=>'Green', 'warning'=>'Yellow', 'danger'=>'Red', 'info'=>'Sky Blue');
+				foreach($types as $type => $tn){
+					$selected = ($type == $action['type']) ? 'SELECTED' : '';
+					echo "<option value=\"$type\" $selected>$tn</option>";
+				}
+				echo <<<BOX
+				</select>
+				<input class="form-control col-lg-3" name="mksdc_services_field[$six][actions][$aix][label]" value="$label" placeholder="label" type="text">
+				<div class="input-group col-lg-6">
+					<input class="form-control" name="mksdc_services_field[$six][actions][$aix][link]" value="$link" placeholder="link" type="text">
+					<span class="input-group-btn"><a class="btn btn-default btn-flat mksdc_action_link" onclick="MKSDC.removeServiceAction(this)" data-target="$boxid"><span class="glyphicon glyphicon-remove"></span></a></span>
+				</div>
+				</div>
+BOX;
+			}
+			echo '</div>'; // close actions
+?></div>
+			<div class="btn-toolbar"><a class="btn btn-flat btn-sm btn-warning mksdc_action_link" onclick="MKSDC.removeService(this)" data-target="mksdc_service_box_<?php print $six; ?>"><span class="glyphicon glyphicon-remove"></span> Remove Service</a></div>
+<!-- close service -->
+</div>
+<?php	}
+?>
+	<!-- close services list  --> 
+	</div>
+</div>
+<script>
+if(typeof MKSDC == 'undefined'){
+	MKSDC = {};
+}
+MKSDC.addServiceAction = function(index){
+	var $ = jQuery;
+	var actionList = $('#mksdc_service_'+index+'_action_list');
+	var aix = parseInt(actionList.find('.mksdc_service_action').last().data('index')) + 1;
+	//$('#mksdc_service_'+index+'_action_list div.mksdc_service_action:last a.mksdc_action_link').hide();
+	actionList.append(MKSDC.buildActionBox(index,aix));
+}
+
+MKSDC.buildActionBoxSelectType = function(six,aix,type){
+	var $ = jQuery;
+	var box = $('<select class=" form-control  col-lg-3" name="mksdc_services_field['+six+'][actions]['+aix+'][type]"></select>');
+	box.append('<option value="primary">Blue</option>');
+	box.append('<option value="success">Green</option>');
+	box.append('<option value="warning">Yellow</option>');
+	box.append('<option value="danger">Red</option>');
+	box.append('<option value="info">Sky Blue</option>');
+	return box;
+}
+MKSDC.buildActionBox = function(six, aix){
+	var $ = jQuery;
+	var box = $('<div id="mksdc_service_'+six+'_action_'+aix+'" class="mksdc_service_action form-inline" data-index="'+aix+'"></div>');
+	box.append(MKSDC.buildActionBoxSelectType(six,aix));
+	box.append('<input class="form-control  col-lg-3" type="text" name="mksdc_services_field['+six+'][actions]['+aix+'][label]" value="" placeholder="Action Label"/>');
+	box.append('<div class="input-group col-lg-6"><input class="form-control"  type="text" name="mksdc_services_field['+six+'][actions]['+aix+'][link]" value="" placeholder="Action Link"/><span class="input-group-btn"><a class="btn btn-default btn-flat" onClick="MKSDC.removeServiceAction(this)" data-target="mksdc_service_'+six+'_action_'+aix+'"><span class="glyphicon glyphicon-remove"></span></a></span></div>');
+	return box;
+}
+MKSDC.buildServiceBox = function(index){
+	var $ = jQuery;
+	var box = $('<div class="mksdc_service_box" id="mksdc_service_box_'+index+'" data-index="'+index+'"></div>');
+	box.append('<hr/><div class="row form-group"><label class="col-lg-3 col-md-3 col-sm-3 col-xs-12">Service</label><div class="col-lg-9 col-md-9 col-sm-9 col-xs-12"><input class="form-control" type="text" name="mksdc_services_field['+index+'][title]" value="" placeholder="Name of the Service"/></div></div>');
+	box.append('<div class="row form-group"><label class="col-lg-3 col-md-3 col-sm-3 col-xs-12">Base URL</label><div class="col-lg-9 col-md-9 col-sm-9 col-xs-12"><input class="form-control" type="text" name="mksdc_services_field['+index+'][url]" value="" placeholder="URL of the service"/></div></div>');
+	var actionContainer = $('<div class="row form-group"><div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><label>Displayed Actions: </label></div><div class="btn-toolbar col-lg-9 col-md-9 col-sm-9 col-xs-12"><a class="btn btn-flat btn-sm btn-sm btn-primary" id="add_another_service_action" onclick="MKSDC.addServiceAction('+index+')"><span class="glyphicon glyphicon-plus"></span> Add Action</a></div></div>');
+	var alBox = $('<div class="col-lg-offset-3 col-md-offset-3 col-sm-offset-3 col-lg-9 col-md-9 col-sm-9 col-xs-12 mksdc_service_actions_list" id="mksdc_service_'+index+'_action_list" data-index="'+index+'"></div>');
+	alBox.append(MKSDC.buildActionBox(index,0));
+	actionContainer.append(alBox);
+	box.append(actionContainer);
+	box.append('<div class="btn-toolbar"><a class="btn btn-flat btn-sm btn-warning mksdc_action_link" onclick="MKSDC.removeService(this)" data-target="mksdc_service_box_'+index+'"><span class="glyphicon glyphicon-remove"></span> Remove Service</a></div>');
+	return box;
+}
+MKSDC.addService = function (){
+	var $ = jQuery;
+	var six = parseInt($('#mksdc_services_list').find('.mksdc_service_box').last().data('index')) + 1;
+	if(isNaN(six)){
+		six=0;
+	}
+	var serviceBox = MKSDC.buildServiceBox(six);
+  	// add item
+  	$('#mksdc_services_list').append(serviceBox);
+}
+MKSDC.removeService = function (a){
+	var $ = jQuery;
+	var trgt = $(a).data('target');
+  	$('#'+trgt).detach();
+}
+MKSDC.removeServiceAction = function (a){
+	var $ = jQuery;
+	var trgt = $(a).data('target');
+	$('#'+trgt).prev().find('a.mksdc_action_link').show();
+  	$('#'+trgt).detach();
+}
+</script>

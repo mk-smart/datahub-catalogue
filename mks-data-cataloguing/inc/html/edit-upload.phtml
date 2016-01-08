@@ -1,0 +1,9 @@
+<!-- Title -->
+<div class="mksdc_field row">
+	<?php $this->partial('field-sources', array(
+			'mksdc_sources_field' => $this->get('mksdc_sources_field', array()),
+			'_errors' => $this->itemOf('_errors','mksdc_sources_field[type]', array()),
+			'class' => ' mksdc_nds col-lg-12 col-md-12 col-sm-12 col-xs-12',
+		
+	));?>
+</div>

@@ -1,0 +1,146 @@
+<style>
+#content{
+	width: 93%;
+}
+#content .entry-content ul:hover a{
+	background-color: inherit;
+}
+#mksdc_sf h4{
+	margin-top: 10px;
+}
+
+#mksdc_sf ul,
+#mksdc_sf ul li{
+	list-style: none;
+	margin-left: 0px;
+}
+#post-<?php print the_ID(); ?> form{
+	padding-bottom:50px;
+	/*width: 70%;*/
+}
+#post-<?php print the_ID(); ?> #mksdc_sf{
+	width: 100%;
+}
+form div.mksdc_field{
+	padding-top: 20px;
+}
+div.mksdc_field label{
+	display:inline-block;
+	/*width:150px;*/
+}
+div.mksdc_error_message{
+	color: red;
+	font-size: 0.9em; 
+}
+div.mksdc_error_message ul{
+	margin:0px;
+}
+div.mksdc_error_message ul li{
+	list-style: none;
+	margin:0px;
+}
+
+.mksdc_field .description,
+.mksdc_field .mksdc_error_message {
+	font-size: 0.8em;
+}
+.mksdc_field .mksdc_error_message {
+	color: #c00000;
+}
+
+@media (min-width: 991px) {
+    .panel .mksdc-dataset-actions {
+        text-align: right;
+    }
+    .mksdc_field .description {
+		/*margin-left: 200px; */
+		padding-left: 1px;
+	}
+	.mksdc_field .mksdc_error_message {
+		/*margin-left: 200px;*/
+	}
+	.mksdc_field_apikey .mksdc_error_message {
+		/*margin-left:220px;*/
+	}
+}
+
+@media (max-width: 990px) {
+    .mksdc_field .description,
+    .mksdc_field .mksdc_error_message {
+		margin-left: 215px;
+	}
+	.mksdc_field_apikey .mksdc_error_message {
+		margin-left:220px;
+	}
+}
+@media (max-width: 770px) {
+    .mksdc_field .description,
+    .mksdc_field .mksdc_error_message {
+		margin-left: 0px;
+	}
+}
+
+@media (max-width: 990px) {
+	.mksdc_field_apikey .mksdc_error_message {
+		margin-left:0px;
+	}
+}
+
+.panel .mksdc-dataset-actions a,
+.panel .mksdc-dataset-actions a:visited,
+.panel .mksdc-dataset-actions a:hover,
+.panel .mksdc-dataset-actions a:link,
+.panel .mksdc-dataset-actions a:active {
+	color: white;
+}
+.panel .mksdc-dataset-actions a:link.btn-default {
+	color: #808080;
+}
+.mksdc-dataset-service{
+	border-top: 1px solid #DDD;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+.content-onecolumn #content {
+	margin: 0px 3%;
+}
+
+table a.mksdc_toggle{
+	color: white !important;
+	width: 70px;
+	text-decoration: none;
+}
+table a.mksdc_toggle.btn-default{
+	color: inherit;
+}
+table a.mksdc_toggle {
+	color: inherit;
+}
+
+a.badge:visited {
+	color: white;
+}
+.mksdc_service_actions_list{
+	display: block;
+}
+.mksdc_clickable {
+	cursor: pointer;
+}
+span.mksdc_clickable {
+	text-decoration: underline;
+}
+.mksdc_right {
+	float: right;
+}
+.mksdc_btn {
+	border: solid 1px black;
+	color: black;
+	padding: 0 2px;
+	line-height: 1;
+}
+.nowrap {
+	white-space: nowrap;
+}
+</style>

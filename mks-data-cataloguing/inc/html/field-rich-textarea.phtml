@@ -1,0 +1,18 @@
+<?php if($this->has('label')): ?>
+<label for="<?php $this->smushed('id'); ?>"
+<?php $this->spitAttrs(array('class','style') , 'label-'); ?>
+><?php $this->smushed('label'); ?>
+</label>
+<?php endif; ?>
+<div class="metabox-holder">
+<div class="postarea wp-editor-expand">
+<?php wp_editor($this->get('value',''), $this->get('name',''), $this->get('settings', array()));?>
+</div></div>
+<?php if($this->full('description')): ?>
+<p class="description col-lg-offset-3 col-md-offset-3 col-sm-offset-4 col-lg-9 col-md-9 col-sm-8 col-xs-12">
+	<?php $this->smushed('description'); ?>
+</p>
+<?php
+endif;
+$this->partial('field-error', array('errors' => $this->get('errors')));
+?>

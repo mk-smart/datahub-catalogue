@@ -1,0 +1,104 @@
+a.mksdc_action_link{
+	cursor: pointer;
+}
+select.mksdc_license_select{
+	
+}
+div.mksdc_message{
+	display:block !important;
+	margin: 5px 0px;
+}
+table.mksdc th,
+table.mksdc td{
+	text-align:left;
+	padding: 2px;
+}
+div.public-dataset{}
+div.private-dataset{
+	background-color: #fdf6ec;
+	border: 1px solid #F0AD4E;
+}
+div.private-dataset .panel-footer{
+	background-color: #f8dcb4;
+	border-top: 1px solid #F0AD4E;
+}
+article.page-dataset header h1 small{
+	font-size: 0.4em;
+}
+.panel .list-group{
+	margin-left: 0px;
+}
+.mksdc_service_box{
+	margin-bottom: 25px;
+}
+#mksdc_numbers, #mksdc_exp_coll, #mksdc_other_pages {
+	padding: 0;
+	margin: 0 8px;
+}
+#mksdc_numbers {
+	margin-left: 0;
+}
+#mksdc_other_pages {
+	margin-right: 0;
+}
+#mksdc_exp_coll:empty, #mksdc_other_pages:empty {
+	display: none;
+}
+#mksdc_edit_dataset .wp-editor-tabs a,
+#mksdc_edit_dataset ul li a {
+	text-decoration:none;
+}
+#mksdc_edit_dataset .wp-editor-container{
+	border: 1px solid #ddd;
+}
+#mksdc_edit_dataset .wp-switch-editor{
+	padding-bottom: 20px;
+	margin-bottom: -1px;
+}
+#mksdc_sources_list a.btn-file:visited{
+	color: #FFF;
+}
+a.btn{
+	text-decoration: none;
+}
+
+/* Flat Bootstrap Buttons */
+/* For IE */
+
+.btn-inverse:active,
+.btn-inverse.active {
+  background-color: #080808 \9;
+}
+
+/* Add 'btn-flat' to your buttons */
+.btn-flat {
+    filter:progid:DXImageTransform.Microsoft.Gradient(enabled='false');
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    background-image:none;
+    /*border:0;*/
+}
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  background: red;
+  cursor: inherit;
+  display: block;
+}
+input[readonly] {
+  background-color: white !important;
+  cursor: text !important;
+}

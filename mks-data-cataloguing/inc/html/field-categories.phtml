@@ -1,0 +1,24 @@
+<?php
+if ($this->has('label')) {
+	if (!$this->has('label-for')) {
+		$this->setParam('label-for', $this->get('id'));
+	}
+	echo '<label';
+	$this->spitAttrs(array('class', 'style', 'for', 'onclick') , 'label-');
+	echo '>';
+	$this->smushed('label');
+	echo '</label>';
+}
+$categories = array();
+foreach($this->get('selected', array()) as $c){
+	array_push($categories, $c->cat_ID);
+}
+?>
+<?php foreach($this->get('categories', array()) as $c):?>
+<?php print $c->name; ?> <input type="checkbox" value="<?php print $c->cat_ID; ?>" <?php (in_array($c->cat_ID, $categories)) ? print 'checked="checked"' : ''; ?>/>
+<?php endforeach;?>
+<?php 
+if($this->full('description')) {
+	echo '<p class="description col-lg-offset-3 col-md-offset-3 col-sm-offset-4 col-lg-9 col-md-9 col-sm-8 col-xs-12">' . $this->smushed('description') . '</p>';
+}
+?>

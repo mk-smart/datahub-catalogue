@@ -1,0 +1,17 @@
+<?php if($this->full('errors')) { ?>
+<div class="<?php echo $this->get('class', 'col-lg-offset-3 col-md-offset-3 col-sm-offset-4 col-lg-9 col-md-9 col-sm-9 col-xs-12'); ?> error-message">
+<?php
+$first = true;
+foreach (@$this->get('errors', array()) as $err) {
+	if (!empty($err)) {
+		if ($first) {
+			$first = false;
+		} else {
+			echo '<br />';
+		}
+		echo $err;
+	}
+}
+?>
+</div>
+<?php } ?>

@@ -1,0 +1,17 @@
+<?php get_header(); ?>
+<?php $this->partial('styles', array());?>
+<article id="post-<?php print the_ID(); ?>"
+	class="page type-page status-publish entry page-dataset">
+	<header class="entry-header">
+		<h1 class="entry-title"><?php the_Title()?>
+		<?php if($this->get('isPrivate') == TRUE): ?>
+			<small class="label label-warning">Private</small>
+		<?php endif; ?>
+		</h1>
+	</header>
+	<div class="entry-content">
+	<?php 
+	$this->partial('dataset-li', $this->getAll()); ?>
+	</div>
+	</article>
+<?php get_footer(); ?>

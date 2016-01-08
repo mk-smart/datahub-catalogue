@@ -1,0 +1,192 @@
+<?php
+$sources = $this->get('mksdc_sources_field', array());?>
+<div class="<?php print $this->get('class',''); ?>">
+<style>#mksdc_services_list .form-group .form-inline {margin-top:5px;}</style>
+<?php 
+
+// For URL links
+$link_tmpl =<<<BOX
+<div class="mksdc_source_box" id="mksdc_source_box_{{{index}}}" data-index="{{{index}}}">
+		<hr/>
+		<div class="row form-group">
+			<label class="col-lg-3 col-md-3 col-sm-3 col-xs-12">Source Name</label>
+			<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">	
+				<input class="form-control" name="mksdc_sources_field[{{{index}}}][title]" value="{{{title}}}" placeholder="Name of the data source" type="text">
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-lg-3 col-md-3 col-sm-3 col-xs-12">Download from URL</label>
+			<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="mksdc_sources_field_{{{index}}}_url">
+			<input type="text" name="mksdc_sources_field[{{{index}}}][link]" value="{{{link}}}" class="form-control" placeholder="http://..."/>
+		    </div>
+		</div>
+		<div class="btn-toolbar"><a class="btn btn-flat pull-right btn-sm btn-warning mksdc_action_link" onclick="MKSDC.removeSource(this)" data-target="mksdc_source_box_{{{index}}}"><span class="glyphicon glyphicon-remove"></span> Remove Source</a></div>
+</div>
+BOX;
+
+// For new files to upload
+$file_tmpl =<<<BOX
+<div class="mksdc_source_box" id="mksdc_source_box_{{{index}}}" data-index="{{{index}}}">
+		<hr/>
+		<div class="row form-group">
+			<label class="col-lg-3 col-md-3 col-sm-3 col-xs-12">Source Name</label>
+			<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">	
+				<input class="form-control" name="mksdc_sources_field[{{{index}}}][title]" value="{{{title}}}" placeholder="Name of the data source" type="text">
+			</div>
+		</div>
+		<div class="row form-group ">
+			<label class="col-lg-3 col-md-3 col-sm-3 col-xs-12">File</label>
+			<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="mksdc_sources_field_{{{index}}}_file">
+				<div class="input-group ">
+                <span class="input-group-btn">
+                    <span class="btn btn-primary btn-file btn-flat">
+                        Browse&hellip; <input type="file" name="mksdc_sources_field[{{{index}}}][file]">
+                    </span>
+                </span>
+                <input type="text" class="form-control" readonly>
+				</div>
+				<span class="inline-help">{{{help}}}</span>
+			</div>
+		</div>
+		<div class="btn-toolbar"><a class="btn btn-flat pull-right btn-sm btn-warning mksdc_action_link" onclick="MKSDC.removeSource(this)" data-target="mksdc_source_box_{{{index}}}"><span class="glyphicon glyphicon-remove"></span> Remove Source</a></div>
+</div>
+BOX;
+
+// For existing uploaded files
+$loaded_tmpl =<<<BOX
+<div class="mksdc_source_box" id="mksdc_source_box_{{{index}}}" data-index="{{{index}}}">
+		<hr/>
+		<div class="row form-group">
+			<label class="col-lg-3 col-md-3 col-sm-3 col-xs-12">Source Name</label>
+			<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+				<input class="form-control" name="mksdc_sources_field[{{{index}}}][title]" value="{{{title}}}" placeholder="Name of the data source" type="text">
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-lg-3 col-md-3 col-sm-3 col-xs-12">File</label>
+			<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="mksdc_sources_field_{{{index}}}_file">
+				<input type="hidden" name="mksdc_sources_field[{{{index}}}][attachment_id]" value="{{{attachment_id}}}"/>
+				<div class="input-group">
+                <span class="input-group-btn">
+                    <a class="btn btn-primary btn-file btn-flat" href="{{{download}}}">
+					<span class="glyphicon glyphicon-download"></span>
+                        Download file
+                    </a>
+                </span>
+					<input type="text" class="form-control" readonly value="{{{name}}}">
+            	</div>
+			</div>
+		</div>
+		<div class="btn-toolbar"><a class="btn btn-flat pull-right btn-sm btn-warning mksdc_action_link"
+				onclick="jQuery(this).find('input').prop('checked', !jQuery(this).find('input').prop('checked'));" >
+				<span class="glyphicon glyphicon-trash"></span> Remove Source
+				<input type="checkbox" name="mksdc_sources_field[{{{index}}}][delete]" value="{{{attachment_id}}}" />
+				</a></div>
+</div>
+BOX;
+
+$upload_tmpl =<<<BOX
+<input type="file" value="{{{url}}}" class="form-control" name="mksdc_sources_field[{{{index}}}][file]"/>
+BOX;
+
+$download_tmpl =<<<BOX
+<a href="{{{download}}}" class="btn btn-primary"><span class="glyphicon glyphicon-download"></span> Download<a>
+BOX;
+
+?>
+<script type="text/template" id="mksdc_source_file_tmpl">
+<?php print $file_tmpl; ?>
+</script>
+<script type="text/template" id="mksdc_source_link_tmpl">
+<?php print $link_tmpl; ?>
+</script>
+<script type="text/template" id="mksdc_source_upload_tmpl">
+<?php print $upload_tmpl; ?>
+</script>
+<div class="btn-toolbar">
+	<a class="mksdc_action_link btn btn-primary btn-flat btn-sm" id="add_another_link" onclick="MKSDC.addLink()"> <span class="glyphicon glyphicon-plus"></span> Add link</a>
+	<a class="mksdc_action_link btn btn-primary btn-flat btn-sm" id="add_another_file" onclick="MKSDC.addFile()"> <span class="glyphicon glyphicon-plus"></span> Add file</a>
+	</div>
+<div id="mksdc_sources_list">
+<?php 
+$spit = '';
+// Existing sources
+if(is_array($sources)):
+    $errors = $this->get('_errors');
+	foreach($sources as $six => $source):
+		$title = @$source['title'];
+		$link = @$source['link'];
+		$attachment_id = @$source['attachment_id'];
+		$download = @wp_get_attachment_url(@$source['attachment_id']);
+		$name = @$source['file']['name'];
+		$type = @$source['file']['type'];
+		$placeholders = array('index' => $six, 'help' => '', 'name'=> $name, 'title' => $title, 'link' => $link, 'download' => $download, 'attachment_id' => $attachment_id, 'type'=>$type);
+		if(isset($errors[$six])){
+			$placeholders['help'] = $errors[$six];
+		}
+		if(isset($source['attachment_id'])){
+			$spit = $loaded_tmpl;
+		} else if(isset($source['file'])){
+			$spit = $file_tmpl;
+		} else {
+			$spit = $link_tmpl;
+		}
+		foreach($placeholders as $what => $with){
+			$spit = str_replace('{{{'.$what.'}}}', $with, $spit);
+		}
+		print $spit;
+	 endforeach; 
+endif; 
+?>
+	<!-- close sources list  --> 
+	</div>
+</div>
+<script>
+if(typeof MKSDC == 'undefined'){
+	MKSDC = {};
+}
+MKSDC.tmpl = function(str,map){
+    for(var rav in map){
+	    //console.log('replacing '+rav+' with '+map[rav]);
+	    str = str.replace(new RegExp('{{{'+rav+'}}}', 'g'), map[rav]);
+	}
+	return str;
+}
+MKSDC.buildNextIndex = function(){
+    var $ = jQuery;
+    var six = parseInt($('#mksdc_sources_list').find('.mksdc_source_box').last().data('index')) + 1;
+    if(isNaN(six)){
+		six = 0;
+	}
+	return six;
+};
+MKSDC.addLink = function(){
+	var $ = jQuery;
+	var tmpl = $('#mksdc_source_link_tmpl').html();
+	var six = MKSDC.buildNextIndex();
+	var sourceBox = MKSDC.tmpl(tmpl, {title:'',index: six, link:''});
+  	// add item
+  	$('#mksdc_sources_list').append(sourceBox);
+};
+MKSDC.addFile = function(){
+	var $ = jQuery;
+	var tmpl = $('#mksdc_source_file_tmpl').html();
+	var six = MKSDC.buildNextIndex();
+	var sourceBox = MKSDC.tmpl(tmpl, {title:'', index: six, help:''});
+  	// add item
+  	$('#mksdc_sources_list').append(sourceBox);
+};
+MKSDC.removeSource = function(a){
+	var $ = jQuery;
+	// find closest
+	$('#'+$(a).data('target')).remove();
+	return true;
+};
+
+jQuery(document).on('change', '.btn-file :file', function() {
+	var $ = jQuery;
+	var input = $(this);
+	label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+	input.parents('.input-group').find(':text').val(label);
+});
+</script>

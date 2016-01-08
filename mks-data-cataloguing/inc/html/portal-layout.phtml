@@ -1,0 +1,9 @@
+<?php get_header(); ?>
+<article id="post-<?php print the_ID(); ?>"
+	class="page type-page status-publish hentry">
+	<header class="entry-header">
+		<h1 class="entry-title"><?php $this->smushed('title'); ?></h1>
+	</header>
+	<div class="entry-content row"><?php $this->partial($this->get('page'), $this->getAll());?></div>
+</article>
+<?php get_footer(); ?>

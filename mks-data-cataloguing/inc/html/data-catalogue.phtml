@@ -1,0 +1,198 @@
+<?php get_header(); ?>
+<?php get_sidebar(); ?>
+<div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
+<section role="main">
+<article id="post-<?php print the_ID(); ?>"
+	class="page type-page status-publish hentry">
+	<header class="entry-header">
+		<h1 class="entry-title">Data catalogue</h1>
+	</header>
+	<div class="entry-content row">
+		<?php
+
+		/**
+		 * Prepare Search Query Arguments
+		 */
+		$paged = $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+		$args=array(
+			'post_type' => 'mksdc-datasets',
+				'post_status' => 'publish',
+				'posts_per_page' => -1,
+				'paged' => $paged,
+				'ignore_sticky_posts'=> 1
+		);
+		// Search string
+		if($txt = $this->itemOf('params', 'txt')){
+			$args['s'] = $txt;
+		}
+		// Categories
+		$args['category__in'] = $this->itemOf('params', 'cat', array());
+		// Tags
+		$args['tag__in'] = $this->itemOf('params', 'tag', array());
+		// Avoid private datasets
+		#$db = $this->get('db');
+		#$privateUUIDs = $db->listPrivateDatasetUUIDs();
+		#$args['meta_query'] = array(
+		#	array(
+		#		'key' => MKSDC_DataAccess::toKey('uuid'),
+		#		'value' => $privateUUIDs,
+		#		'compare' => 'NOT IN'
+		#	)
+		#);
+
+		?>
+		
+		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+			<form id="mksdc_sf" method="get" action="<?php print MKSDC_Plugin::getPageFromTemplate(MKSDC_Plugin::DATA_CATALOGUE_TMPL); ?>">
+				<?php
+				// Make the form work with standard WP page urls
+				if(isset($_GET['page_id'])): ?>
+					<input type="hidden" name="page_id" value="<?php print $_GET['page_id'];?>"/>
+				<?php endif; ?>
+				<input type="text" name="txt" value="<?php print $txt; ?>" placeholder="search&hellip;" maxlength="50" size="15" />
+				<button type="submit">Search</button>
+				<?php
+				$categories = get_categories(array(
+					'show_option_all'    => '',
+						'orderby'            => 'name',
+						'order'              => 'ASC',
+						'style'              => 'list',
+						'show_count'         => 1,
+						'hide_empty'         => 0,
+						'use_desc_for_title' => 1,
+						'child_of'           => 0,
+						'feed'               => '',
+						'feed_type'          => '',
+						'feed_image'         => '',
+						'exclude'            => '',
+						'exclude_tree'       => '',
+						'include'            => '',
+						'hierarchical'       => 1,
+						'title_li'           => __( 'Categories' ),
+						'show_option_none'   => __( 'No categories' ),
+						'number'             => null,
+						'echo'               => 1,
+						'depth'              => 0,
+						'current_category'   => 0,
+						'pad_counts'         => 0,
+						'taxonomy'           => 'category',
+						'walker'             => null
+   			));?>
+				<h4>Categories</h4>
+   			<ul>
+					<?php foreach($categories as $category): ?>
+						<li><input
+									<?php if(in_array($category->term_id, $args['category__in'])):?>
+									checked="checked"
+									<?php endif;?>
+									onchange="form.submit()"
+									name="cat[<?php
+														$cat = $category->term_id;
+														print $cat;
+														?>]"
+									id="cat[<?php print $cat; ?>]"
+									type="checkbox"
+									value="<?php print $cat; ?>" /><label for="cat[<?php print $cat; ?>]">&nbsp;<?php print $category->name; ?></label></li>
+					<?php endforeach; ?>
+				</ul><?php /* TAGS NO LONGER REQUIRED ?>
+				<!-- TAGS -->
+				<h4>Tags</h4>
+				<?php $tags = get_tags(); ?>
+				<ul>
+					<?php foreach($tags as $tag): ?>
+						<li><input
+									<?php if(in_array($tag->term_id, $args['tag__in'])):?>
+									checked="checked"
+									<?php endif;?>
+									onclick="jQuery(this).toggle(this.checked); jQuery(mksdc_sf).submit();"
+									name="tag[<?php print $tag->term_id; ?>]"
+									type="checkbox"
+									value="<?php print $tag->term_id; ?>" /> <?php print $tag->name; ?></li>
+					<?php endforeach; ?>
+				</ul><?php */ ?>
+				<!-- end sf -->
+			</form>
+		</div>
+		<div id="mksdc_posts" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+			<?php
+			global $trouble;
+			if (isset($trouble) && $trouble === true) {
+				echo 'Sorry, there seems to be a temporary problem.  Please try again later.';
+			} else {
+				$datasets = array();
+				$db = $this->get('db', NULL);
+				if($db){
+					$my_query = new WP_Query($args);
+					if ($my_query->have_posts()) {
+						include 'data-catalogue-nav.phtml';
+						while ($my_query->have_posts()) {
+							$my_query->the_post();
+							$tags = get_the_tags();
+
+							$dataset = $db->getDataset(get_the_ID());
+							// we override the content with the excerpt
+							$dataset['content'] = get_the_excerpt();
+
+							// Collapse by default
+							$dataset['collapse'] = true;
+
+							$this->partial('dataset-li', $dataset);
+						}
+						include 'data-catalogue-nav.phtml';
+					} else {
+						echo '<p>Nothing found!</p>';
+					}
+					wp_reset_postdata();
+				}else{
+					MKSDC_Plugin::logErr('Missing $db in data-catalogue.phtml');
+				}
+			}
+		?>
+		</div>
+		<script type="text/javascript">
+		window.mksdc_btns = [];
+		jQuery('#mksdc_posts > .panel').each(
+			function (i, outer) {
+				var plus = document.createElement('button');
+				plus.type = 'button';
+				plus.onclick = function () { expandOrCollapse(this); };
+				setCollapseBtn(plus, true);
+				window.mksdc_btns.push(plus);
+				jQuery(outer).children(':first').prepend(plus);
+				var exp = [];
+				jQuery(outer).children(':hidden').each(
+					function (i, inner) {
+						exp.push(inner);
+					}
+				);
+				outer._expandables = jQuery(exp);
+				outer._collapsed = true;
+			}
+		);
+		window.mksdc_btns = jQuery(window.mksdc_btns);
+		function expandOrCollapse (e, force) {
+			var p = e.parentNode.parentNode;
+			if (force !== undefined && force === !p._collapsed) return;
+			if (p._collapsed) {
+				p._expandables.show('blind');
+			} else {
+				p._expandables.hide('blind');
+			}
+			var coll = p._collapsed = !p._collapsed;
+			setCollapseBtn(e, coll);
+		}
+		function setCollapseBtn (e, coll) {
+			e.innerHTML = coll ? '+' : '&#8211;';
+			e.title = coll ? 'Show more...' : 'Show less...';
+			var c = 'btn btn-xs pull-right btn-';
+			e.className = c + (coll ? 'info' : 'primary');
+			e.blur();
+		}
+		function expandOrCollapseAll (expand) {
+			window.mksdc_btns.each(function (i, e) { expandOrCollapse(e, expand); });
+		}
+		</script>
+	</div>
+</article>
+</section></div>
+<?php get_footer(); ?>

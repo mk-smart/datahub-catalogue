@@ -1,0 +1,55 @@
+<?php
+if ($this->has('label')) {
+	if (!$this->has('label-for')) {
+		$this->setParam('label-for', $this->get('id'));
+	}
+	echo '<label';
+	$this->spitAttrs(array('class', 'style', 'for', 'onclick') , 'label-');
+	echo '>';
+	$this->smushed('label');
+	echo '</label>';
+}
+$categories = array();
+$supportedIds = array($this->get('tag-it-id','ID'),'id','term_id','cat_ID','post_id');
+$id = function($obj) use ($supportedIds){
+	foreach($supportedIds as $propertyId){
+		if(@property_exists($obj, $propertyId)){
+			return $obj->{$propertyId};
+		}elseif (@array_key_exists($propertyId,$obj)){
+			return $obj[$propertyId];
+		}
+	}
+};
+$supportedNames = array($this->get('tag-it-name','name'),'title','post_title');
+$name = function($obj) use ($supportedNames){
+	foreach($supportedNames as $propertyName){
+		if(@property_exists($obj, $propertyName)){
+			return $obj->{$propertyName};
+		}elseif (@array_key_exists($propertyName,$obj)){
+			return $obj[$propertyName];
+		}
+	}
+};
+foreach($this->get('selected', array()) as $c){
+	array_push($categories, $id($c));
+}
+?>
+<select <?php $this->spitAttrs(array('name', 'id', 'multiple', 'class', 'style')); ?> >
+<?php foreach($this->get('categories', array()) as $c):?>
+<option value="<?php print $id($c); ?>" <?php (in_array($id($c), $categories)) ? print 'selected="selected"' : ''; ?>><?php print $name($c); ?> </option>
+<?php endforeach;?>
+</select><script type="text/javascript">
+jQuery(document).ready(function(){
+    jQuery('#<?php print $this->get('id');?>').select2(<?php print $this->get('select2');?>);
+    jQuery('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		// Refresh select2 width
+		jQuery('#<?php print $this->get('id');?>').select2(<?php print $this->get('select2');?>);
+	});
+});
+</script>
+<?php 
+$this->partial('field-error', array('errors' => $this->get('errors')));
+if($this->full('description')) {
+	echo '<p class="description col-lg-offset-3 col-md-offset-3 col-sm-offset-4 col-lg-9 col-md-9 col-sm-8 col-xs-12">' . $this->smushed('description') . '</p>';
+}
+?>

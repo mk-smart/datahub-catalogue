@@ -1,0 +1,58 @@
+<?php
+if($this->has('label')) {
+?>
+	<label
+		<?php
+		if (!$this->has('label-for')) $this->setParam('label-for', $this->get('id'));
+		$this->spitAttrs(array('class','style', 'for', 'onclick', 'onchange') , 'label-');
+		?>
+		><?php $this->smushed('label'); ?>
+	</label>
+<?php
+}
+$smushed = $this->has("options-safe");
+$options = $this->get($smushed ? 'options-safe' : 'options');
+// Was a policy provided about how to handle an empty option list?
+if (empty($options) && $this->has('empty-ok') && is_bool($this->get('empty-ok'))) {
+	$ep = $this->get('empty-ok');
+	// true => An empty list is fine, just don't show it
+	if ($ep) {
+		echo '<i>No options to show.</i>';
+	}
+	// false => An empty list is bad, so show a warning
+	else {
+		echo '<i style="color:#c00000">Sorry, unable to retrieve options.</i>';
+	}
+}
+// default => just show the list even if it's empty
+else {
+?>
+<select<?php $this->spitAttrs(array('onclick', 'onchange', 'onfocus', 'onblur', 'name', 'id')); ?>>
+	<?php
+	foreach($options as $value => $label) {
+		if (is_array($label)) {
+			$title = ' title="' . ($smushed ? @$label[1] : $this->smush(@$label[1])) . '"';
+			$label = $smushed ? $label[0] : $this->smush($label[0]);
+		} else {
+			$title = '';
+		}
+	?>
+	<option<?php
+				 echo $this->get('value') == $value ? ' selected="selected"' : '';
+				 echo $title;
+				 ?>
+		value="<?php echo $smushed ? $value : $this->smush($value); ?>">
+		<?php echo $smushed ? $label : $this->smush($label); ?>
+	</option>
+	<?php } ?>
+</select>
+<?php
+}
+$this->partial('field-error', array('errors' => $this->get('errors')));
+if ($this->full('description')) { ?>
+	<p class="description col-lg-offset-3 col-md-offset-3 col-sm-offset-4 col-lg-9 col-md-9 col-sm-8 col-xs-12">
+		<?php $this->smushed('description'); ?>
+	</p>
+<?php
+ }
+?>

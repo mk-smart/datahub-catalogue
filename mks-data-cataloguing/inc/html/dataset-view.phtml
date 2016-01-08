@@ -1,0 +1,129 @@
+<?php get_header(); ?>
+<div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+<aside id="aside" role="complementary">
+<h1>Information</h1>			
+<div class="textwidget">
+<!-- Extensions HERE -->
+	<?php
+	$p = MKSDC_Plugin::instance();
+	$extensions = $p->getExtensions('dataset-render');
+
+	$subviews = array();
+	foreach($extensions as $key => $ext){
+		if(is_array($ext)){
+			$obj = $ext[0];
+			$met = $ext[1];
+			print $obj->$met($this->getAll());
+		}elseif(function_exists($ext)){
+			print $ext($this->getAll(), '');
+		}
+	}
+	?>
+	<!-- End Extensions -->
+	<div class="feed"></div>
+	<?php if($this->full('categories')): ?>
+					<p><strong>Categories:</strong>
+						<?php foreach($this->get('categories', array()) as $tag): ?>
+							<a class="tags"
+								href="<?php print MKSDC_Plugin::getDataCatalogueLink(array('cat[' . $tag->term_id . ']'=> $tag->term_id)); ?>"><?php print $tag->name;?>
+							</a>
+						<?php endforeach;?>
+					</p>
+				<?php endif; ?>
+				<?php if($this->full('tags')): ?>
+					<p>
+						<strong>Tags:</strong>
+						<?php foreach($this->get('tags', array()) as $tag): ?>
+							<a class="tags"
+								href="<?php print MKSDC_Plugin::getDataCatalogueLink(array('tag[' . $tag->term_id . ']'=> $tag->term_id)); ?>"><?php print $tag->name;?>
+							</a>
+						<?php endforeach;?>
+					</p>
+				<?php endif; ?>
+				<?php if($this->full('formats')): ?>
+					<p>
+						<strong>Formats:</strong>
+						<?php foreach($this->get('formats', array()) as $tag): ?>
+							<a class="tags"
+								href="<?php print MKSDC_Plugin::getDataCatalogueLink(array('format[' . $tag->term_id . ']'=> $tag->term_id)); ?>"><?php print $tag->name;?>
+							</a>
+						<?php endforeach;?>
+					</p>
+				<?php endif; ?>
+				<?php if($this->full('owner')): ?>
+					<p><strong>Owner:</strong>
+						<?php $firstl = TRUE;?>
+						<?php
+						foreach($this->get('owner') as $owner):
+						if(!$firstl): ?>; <?php endif;?>
+							<?php print $owner->name; ?>
+						<?php
+						$firstl = FALSE;
+						endforeach;?>
+					</p>
+				<?php endif; ?>
+				<?php if($this->itemOf('source','link') != ''): ?>
+					<p><strong>Source:</strong> <?php
+										$slink = $this->itemOf('source','link');
+										$sn = $this->itemOf('source','label');
+										if($sn == '') {$sn = $slink;}
+										?>
+						<a href="<?php print $slink; ?>"><?php print $sn; ?></a>
+					</p>
+				<?php endif; ?>
+				<p>
+					<strong>License:</strong>
+					<?php $firstl = TRUE;?>
+					<?php
+					foreach($this->get('license') as $license):
+					if(!$firstl): ?>; <?php endif;?>
+						<a href="<?php print get_permalink($license['id']); ?>"><?php print $license['title']; ?></a>
+						<?php $firstl = FALSE;
+					endforeach;?>
+				</p>
+</div></aside></div>
+
+<!-- Page content -->
+
+<div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
+<section role="main">
+<article id="post-<?php print get_the_ID(); ?>" 
+class="post-<?php print get_the_ID(); ?> page type-page status-publish hentry <?php print ($this->get('isPrivate', FALSE))?"private-dataset":"public-dataset";?>">
+<div class="alignright"></div>
+<header class="header">
+<h1 class="entry-title"><?php
+		foreach(get_the_category() as $cat): if(strlen($cat->slug) != 1) continue;
+		?><span class="icon" title="<?php print $cat->name; ?>" data-icon="<?php print $cat->slug;?>"></span><?php
+		 endforeach; ?><?php print get_the_title() ?></h1>
+</header>
+<section class="entry-content">
+<?php print do_shortcode(wpautop($this->get('content'), TRUE)); ?>
+</section>
+<?php if($this->full('attribution')): ?>
+	<hr/>
+	<section class="entry-attribution">
+		<!-- attribution -->
+		<h4>Attribution statement</h4>
+		<p><code><?php $this->smushed('attribution'); ?></code></p>
+	</section>
+<?php endif; ?>
+
+<?php if(@$this->full('services')): ?>
+	<hr/>
+	<section class="entry-services">
+		<?php foreach(@$this->get('services', array()) as $service): ?>
+			<div class="mksdc-dataset-service" style="<?php echo $style; ?>">
+	    		<h4><?php print @$service['title']; ?>:
+					<div class="btn-group btn-group-sm mksdc-dataset-actions pull-right">
+						<?php foreach(@$service['actions'] as $action): ?>
+							<a class="btn btn-flat btn-<?php print $action['type']; ?>" href="<?php print do_shortcode($action['link']); ?>"><?php print $action['label']; ?></a>
+						<?php endforeach; ?>
+					</div>
+				</h4>
+			</div>
+		<?php endforeach; ?>
+		</section>
+  <?php endif; ?>
+
+</article></section></div>
+<?php get_footer(); ?>

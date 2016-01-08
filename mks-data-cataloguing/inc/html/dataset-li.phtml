@@ -1,0 +1,135 @@
+
+<div class="panel panel-default mksdc mksdc-dataset-li <?php print ($this->get('isPrivate', FALSE))?"private-dataset":"public-dataset";?>">
+	<?php if(!$this->has('single')): ?>
+		<div class="panel-heading">
+			<h3 class="panel-title">
+				<a href="<?php print $this->itemOf('post','guid');?>"><?php print $this->itemOf('post','post_title');?>
+				</a>
+				<?php if($this->get('isPrivate', FALSE)): ?>
+					<small class="label label-warning">Private</small>
+				<?php endif; ?>
+			</h3>
+		</div>
+	<?php endif;?>
+
+	<?php
+
+	$collapse = $this->has('collapse') && $this->get('collapse');
+	$style = $collapse ? 'display:none;' : '';
+
+	if($this->full('content')):
+	?>
+		<div class="panel-body">
+			<!-- description -->
+			<?php print do_shortcode(wpautop($this->get('content'), TRUE)); ?>
+		</div>
+	<?php endif; ?>
+	<?php if($this->full('attribution')): ?>
+		<div class="panel-body mksdc-dataset-service" style="<?php echo $style; ?>">
+			<!-- attribution -->
+			Attribution statement:
+			<code><?php $this->smushed('attribution'); ?></code>
+		</div>
+	<?php endif; ?>
+
+	<!-- Extensions HERE -->
+	<?php
+	$p = MKSDC_Plugin::instance();
+	$extensions = $p->getExtensions('dataset-render');
+
+	$subviews = array();
+	foreach($extensions as $key => $ext){
+		if(is_array($ext)){
+			$obj = $ext[0];
+			$met = $ext[1];
+			print $obj->$met($this->getAll());
+		}elseif(function_exists($ext)){
+			print $ext($this->getAll(), $collapse);
+		}
+	}
+	?>
+	<!-- End Extensions -->
+	<?php if(@$this->full('services')): ?>
+		<?php foreach(@$this->get('services', array()) as $service): ?>
+			<div class="panel-body mksdc-dataset-service" style="<?php echo $style; ?>">
+	    	<div><?php print @$service['title']; ?>
+					<div class="btn-group btn-group-sm mksdc-dataset-actions pull-right">
+						<?php foreach(@$service['actions'] as $action): ?>
+							<a class="btn btn-flat btn-<?php print $action['type']; ?>" href="<?php print do_shortcode($action['link']); ?>"><?php print $action['label']; ?></a>
+						<?php endforeach; ?>
+					</div>
+				</div>
+			</div>
+		<?php endforeach; ?>
+  <?php endif; ?>
+
+	<div class="panel-footer" style="<?php echo $style; ?>">
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<?php if($this->full('categories')): ?>
+					<div>
+						Categories:
+						<?php foreach($this->get('categories', array()) as $tag): ?>
+							<a class="badge"
+								href="<?php print MKSDC_Plugin::getDataCatalogueLink(array('cat[' . $tag->term_id . ']'=> $tag->term_id)); ?>"><?php print $tag->name;?>
+							</a>
+						<?php endforeach;?>
+					</div>
+				<?php endif; ?>
+				<?php if($this->full('tags')): ?>
+					<div>
+						Tags:
+						<?php foreach($this->get('tags', array()) as $tag): ?>
+							<a class="badge"
+								href="<?php print MKSDC_Plugin::getDataCatalogueLink(array('tag[' . $tag->term_id . ']'=> $tag->term_id)); ?>"><?php print $tag->name;?>
+							</a>
+						<?php endforeach;?>
+					</div>
+				<?php endif; ?>
+				<?php if($this->full('formats')): ?>
+					<div>
+						Formats:
+						<?php foreach($this->get('formats', array()) as $tag): ?>
+							<a class="badge"
+								href="<?php print MKSDC_Plugin::getDataCatalogueLink(array('format[' . $tag->term_id . ']'=> $tag->term_id)); ?>"><?php print $tag->name;?>
+							</a>
+						<?php endforeach;?>
+					</div>
+				<?php endif; ?>
+				<?php if($this->full('owner')): ?>
+					<div>
+						Owner:
+						<?php $firstl = TRUE;?>
+						<?php
+						foreach($this->get('owner') as $owner):
+						if(!$firstl): ?>; <?php endif;?>
+							<?php print $owner->name; ?>
+						<?php
+						$firstl = FALSE;
+						endforeach;?>
+					</div>
+				<?php endif; ?>
+				<?php if($this->itemOf('source','link') != ''): ?>
+					<div>
+						Source: <?php
+										$slink = $this->itemOf('source','link');
+										$sn = $this->itemOf('source','label');
+										if($sn == '') {$sn = $slink;}
+										?>
+						<a href="<?php print $slink; ?>"><?php print $sn; ?></a>
+					</div>
+				<?php endif; ?>
+				<div>
+					License:
+					<?php $firstl = TRUE;?>
+					<?php
+					foreach($this->get('license') as $license):
+					if(!$firstl): ?>; <?php endif;?>
+						<a href="<?php print get_permalink($license['id']); ?>"><?php print $license['title']; ?></a>
+						<?php $firstl = FALSE;
+					endforeach;?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

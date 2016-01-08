@@ -1,0 +1,24 @@
+<table class="mksdc">
+	<?php if($this->has($this->get('columns'))): ?>
+	<thead>
+		<tr>
+			<?php foreach($this->get('columns') as $col): ?>
+			<th><?php print $col; ?>
+			</th>
+			<?php endforeach; ?>
+		</tr>
+	</thead>
+	<?php endif; ?>
+	<tbody>
+		<?php foreach($this->get('rows', array()) as $row): ?>
+		<tr>
+			<?php foreach($row as $cell): ?>
+			<?php if(!is_array($cell)): ?>
+			<?php $cell = array('td',$cell);?>
+			<?php endif; ?>
+			<?php print '<' . $cell[0] . '>'. $cell[1] .'</'.  $cell[0] . '>'; ?>
+			<?php endforeach; ?>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>

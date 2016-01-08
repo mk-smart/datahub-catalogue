@@ -1,0 +1,76 @@
+<?php 
+wp_enqueue_script('post');
+wp_enqueue_script('word-count');
+wp_enqueue_script('editor');
+wp_enqueue_script('media-upload');
+get_header(); 
+?>
+<article id="post-<?php print the_ID(); ?>"
+	class="page type-page status-publish entry page-dataset">
+	<header class="entry-header">
+		<h1 class="entry-title">Create a new Dataset
+		</h1>
+	</header>
+	<div class="entry-content">
+	<!-- pre><?php print_r($this->getAll());?></pre -->
+	<div>
+	<?php $this->partial('errors-summary', $this->getAll()); ?>
+	<form action="" enctype="multipart/form-data" method="POST" id="mksdc_edit_dataset" name="mksdc_edit_dataset" >
+				<?php wp_nonce_field( 'new-dataset_' . get_current_user_id()); ?>
+				<div class="tabbable boxed parentTabs">
+					<?php $this->partial('edit-tabs', $this->getAll()); ?>
+					<div class="tab-content" style="border:solid 1px #ddd;border-top:none;padding:15px 30px 15px 15px">
+						<!--  General information -->
+						<div class="tab-pane fade in active" id="ds-info">
+							<?php $this->partial('edit-information', $this->getAll()); ?>
+							<?php $this->partial('wizard-buttons', array('next'=>true, 'cancel'=>array('href'=>home_url()))); ?>
+						</div>
+						<div class="tab-pane fade in" id="ds-licence">
+							<?php $this->partial('edit-licence', $this->getAll()); ?>
+							<?php $this->partial('wizard-buttons', array('next'=>true,'prev'=>true, 'cancel'=>array('href'=>home_url()))); ?>
+						</div>
+						<?php /*?>
+						<div class="tab-pane fade in" id="ds-download">
+							<?php $this->partial('edit-download', $this->getAll()); ?>
+							<?php $this->partial('wizard-buttons', array('next'=>true,'prev'=>true, 'cancel'=>array('href'=>home_url()))); ?>
+						</div>
+						<?php */?>
+						<div class="tab-pane fade in" id="ds-upload">
+							<?php $this->partial('edit-upload', $this->getAll()); ?>
+							<?php $this->partial('wizard-buttons', array('next'=>true,'prev'=>true, 'cancel'=>array('href'=>home_url()))); ?>
+						</div>
+						<!-- Other tabs here -->
+						<?php /* Extend the Edit Dataset View with the 'dataset-edit-tab-content' extension */
+						$extensionsNumber = count(MKSDC_Plugin::instance()->getExtensions('dataset-edit-tab')); 
+						foreach(MKSDC_Plugin::instance()->getExtensions('dataset-edit-tab') as $extension): ?>
+							<?php unset($v); ?>
+							<?php if(is_array(@$extension) && @is_object(@$extension[0])): 
+								$o = $extension[0];
+							    $v = $o->$extension[1](); ?>
+							<?php elseif(function_exists($extension)):
+								$v = $extension(); ?>
+							<?php endif; ?>
+							<?php if($v){
+								$tabId = $v[0];
+							}?>
+							<div class="tab-pane fade in" id="ds-<?php print $tabId; ?>">
+							<?php foreach(MKSDC_Plugin::instance()->getExtensions('dataset-edit-tab-content') as $extension): ?>
+							<?php unset($v); ?>
+							<?php if(is_array(@$extension) && @is_object(@$extension[0])): 
+								$o = $extension[0];
+							    $o->$extension[1]($tabId, $this->getAll()); ?>
+							<?php elseif(function_exists($extension)):
+								$extension($tabId, $this->getAll()); ?>
+							<?php endif; ?>
+							<?php endforeach; ?>
+							<?php $this->partial('wizard-buttons', ($extensionsNumber==1)?array('prev'=>true, 'save'=>true, 'cancel'=>array('href'=>home_url())):array('next'=>true,'prev'=>true, 'cancel'=>array('href'=>home_url()))); ?>
+							<?php $extensionsNumber--; ?>
+							</div>
+						<?php endforeach; ?>
+					</div>
+				</div>
+			</form>
+	</div>
+	</div>
+	</article>
+<?php get_footer(); ?>
