@@ -516,7 +516,7 @@ class MKSDC_DataAccess{
 	 *
 	 * @return string
 	 */
-	function gen_uuid() {
+	public static function gen_uuid() {
 		return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 				// 32 bits for "time_low"
 				mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
