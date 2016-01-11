@@ -124,6 +124,20 @@ class="post-<?php print get_the_ID(); ?> page type-page status-publish hentry <?
 		<?php endforeach; ?>
 		</section>
   <?php endif; ?>
+  <?php if(@$this->full('sources')): ?>
+	<hr/>
+	<section class="entry-sources">
+		<?php foreach(@$this->get('sources', array()) as $source): ?>
+			<div class="mksdc-dataset-source" style="<?php echo $style; ?>">
+	    		<h4><?php print @$source['title']; ?> (<?php print @$source['file']['type'] ?>):
+					<div class="btn-group btn-group-sm mksdc-dataset-actions pull-right">
+							<a class="btn btn-flat btn-danger" href="<?php print wp_get_attachment_url( $source['attachment_id'] ); ?>"><?php print @$source['file']['name'] ?> [<?php print size_format($source['file']['size']); ?>]</a>
+					</div>
+				</h4>
+			</div>
+		<?php endforeach; ?>
+		</section>
+  <?php endif; ?>
 
 </article></section></div>
 <?php get_footer(); ?>

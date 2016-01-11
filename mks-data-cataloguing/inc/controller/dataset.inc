@@ -303,12 +303,14 @@ class MKSDC_Sources_Validator implements MVC_List_Validator{
 	}
 	public function test($val){
 		$errors = array();
-		foreach($_FILES['mksdc_sources_field'] as $k => $f){
-			foreach($f as $f1){
-				if($k == 'type'){
-					$valid = in_array($f1['file'], $this->_types);
-					if(!$valid){
-						$errors[$k] = 'File type is not supported: ' . $f1['file'];
+		if(isset($_FILES['mksdc_sources_field'])){
+			foreach($_FILES['mksdc_sources_field'] as $k => $f){
+				foreach($f as $f1){
+					if($k == 'type'){
+						$valid = in_array($f1['file'], $this->_types);
+						if(!$valid){
+							$errors[$k] = 'File type is not supported: ' . $f1['file'];
+						}
 					}
 				}
 			}
