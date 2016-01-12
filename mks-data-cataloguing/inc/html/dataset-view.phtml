@@ -111,29 +111,38 @@ class="post-<?php print get_the_ID(); ?> page type-page status-publish hentry <?
 <?php if(@$this->full('services')): ?>
 	<hr/>
 	<section class="entry-services">
-		<?php foreach(@$this->get('services', array()) as $service): ?>
-			<div class="mksdc-dataset-service" style="<?php echo $style; ?>">
-	    		<h4><?php print @$service['title']; ?>:
-					<div class="btn-group btn-group-sm mksdc-dataset-actions pull-right">
-						<?php foreach(@$service['actions'] as $action): ?>
-							<a class="btn btn-flat btn-<?php print $action['type']; ?>" href="<?php print do_shortcode($action['link']); ?>"><?php print $action['label']; ?></a>
-						<?php endforeach; ?>
-					</div>
-				</h4>
-			</div>
-		<?php endforeach; ?>
-		</section>
+	<?php foreach(@$this->get('services', array()) as $service): ?>
+		<div class="mksdc-dataset-service" style="<?php echo $style; ?>">
+    		<h4><?php print @$service['title']; ?>:
+				<div class="btn-group btn-group-sm mksdc-dataset-actions pull-right">
+					<?php foreach(@$service['actions'] as $action): ?>
+						<a class="btn btn-flat btn-<?php print $action['type']; ?>" href="<?php print do_shortcode($action['link']); ?>"><?php print $action['label']; ?></a>
+					<?php endforeach; ?>
+				</div>
+			</h4>
+		</div>
+	<?php endforeach; ?>
+	</section>
   <?php endif; ?>
   <?php if(@$this->full('sources')): ?>
 	<hr/>
+	
 	<section class="entry-sources">
 		<?php foreach(@$this->get('sources', array()) as $source): ?>
-			<div class="mksdc-dataset-source" style="<?php echo $style; ?>">
-	    		<h4><?php print @$source['title']; ?> (<?php print @$source['file']['type'] ?>):
+			<div class="mksdc-dataset-source">
+	    		<?php if(!array_key_exists('link', $source)): ?>
+	    		<h4><?php print @$source['title']; ?> <span class="mksdc-source-type">(<?php print @$source['file']['type'] ?>)</span>
 					<div class="btn-group btn-group-sm mksdc-dataset-actions pull-right">
-							<a class="btn btn-flat btn-danger" href="<?php print wp_get_attachment_url( $source['attachment_id'] ); ?>"><?php print @$source['file']['name'] ?> [<?php print size_format($source['file']['size']); ?>]</a>
+							<a class="btn btn-flat btn-success" href="<?php print wp_get_attachment_url( $source['attachment_id'] ); ?>"><?php print @$source['file']['name'] ?> [<?php print size_format($source['file']['size']); ?>]</a>
 					</div>
 				</h4>
+				<?php else:?>
+				<h4><?php print @$source['title']; ?> <span class="mksdc-source-type">(HTTP Link)</span>
+					<div class="btn-group btn-group-sm mksdc-dataset-actions pull-right">
+							<a class="btn btn-flat btn-success" href="<?php print $source['link']; ?>">Access resource</a>
+					</div>
+				</h4>
+				<?php endif; ?>
 			</div>
 		<?php endforeach; ?>
 		</section>

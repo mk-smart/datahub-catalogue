@@ -58,6 +58,13 @@ article.page-dataset header h1 small{
 #mksdc_sources_list a.btn-file:visited{
 	color: #FFF;
 }
+.entry-sources .mksdc-dataset-source {
+	margin-top: 5px;
+}
+.entry-sources .mksdc-dataset-source .mksdc-source-type{
+	font-size: 0.9em;
+	
+}
 a.btn{
 	text-decoration: none;
 }
