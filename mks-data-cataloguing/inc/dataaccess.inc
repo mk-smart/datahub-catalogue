@@ -20,7 +20,7 @@ class MKSDC_DataAccess{
 	public function getLicensesSelectOptions(){
 		// Prepare options once for all
 		$options = array();
-		$args=array('post_type' => 'mksdc-policies');
+		$args=array('post_type' => 'mksdc-policies', 'nopaging' => true);
 		$my_query = new WP_Query($args);
 		if( $my_query->have_posts() ) {
 			while ($my_query->have_posts()) {
