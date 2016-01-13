@@ -111,11 +111,11 @@ END;
 		if(!is_array($ds)){
 			$ds = $db->getDataset($ds);
 		}
-
+		
 		$d = new stdClass();
 		$dp = $ds['post'];
 		$d->{"@type"} = "dcat:Dataset";
-		$d->{"@id"} = "dataset:" . $dp->post_name;
+		$d->{"@id"} = "dataset:" . @$ds['uuid'][0];
 		$d->{"title"} = $dp->post_title;
 		$d->{"description"} = get_the_excerpt();
 		$d->{"landingPage"} = get_permalink($dp->ID);

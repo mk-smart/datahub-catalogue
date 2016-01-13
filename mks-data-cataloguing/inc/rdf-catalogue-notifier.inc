@@ -6,7 +6,8 @@ function mksdc_notify_rdf_catalogue($post_id, $type, $action){
 	$p = get_post($post_id);
 	if($type == 'mksdc-datasets'){
 		$jsonld = MKSDC_JSONLD::dataset($p->post_name);
-		$graph = MKSDC_Plugin::getLinkedDataURI('dataset/' . $p->post_name);
+		$uuid = $jsonld->{"@id"};
+		$graph = MKSDC_Plugin::getLinkedDataURI('dataset/' . $uuid);
 	}else if($type == 'mksdc-policies'){
 		$jsonld = MKSDC_JSONLD::policy($p->post_name);
 		$p = get_post($post_id);
