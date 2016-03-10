@@ -21,7 +21,7 @@
 	?>
 	<!-- End Extensions -->
 	<div class="feed"></div>
-	<?php if($this->full('categories')): ?>
+				<?php if($this->full('categories')): ?>
 					<p><strong>Categories:</strong>
 						<?php foreach($this->get('categories', array()) as $tag): ?>
 							<a class="tags"
@@ -80,6 +80,11 @@
 						<a href="<?php print get_permalink($license['id']); ?>"><?php print $license['title']; ?></a>
 						<?php $firstl = FALSE;
 					endforeach;?>
+				</p>
+				<p>
+					<strong>ID:</strong><code><?php
+					print $this->itemOf('uuid',0);
+					?></code>
 				</p>
 </div></aside></div>
 
