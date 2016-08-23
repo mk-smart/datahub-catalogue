@@ -198,14 +198,20 @@ class MKSDC_Plugin{
 	 */
 	function add_scripts(){
 		// Bootstrap
+		wp_register_script('bootstrap', plugins_url('/vendor/twbs/bootstrap/dist/js/bootstrap.min.js', __FILE__), array('jquery'));
+		wp_register_style ('bootstrap', plugins_url('/vendor/twbs/bootstrap/dist/css/bootstrap.min.css', __FILE__));
+
 		wp_register_script('mksdc-js', plugins_url('/js/mksdc.js', __FILE__), array('jquery'));
-		wp_register_style('mksdc-style', plugins_url('/css/mksdc.css', __FILE__));
+		wp_register_style ('mksdc-style', plugins_url('/css/mksdc.css', __FILE__));
 		wp_register_script('select2-js', '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js', array('jquery'));
-		wp_register_style('select2-css', '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css');
+		wp_register_style ('select2-css', '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css');
+
+		wp_enqueue_script('bootstrap');
+		wp_enqueue_style ('bootstrap');
 		wp_enqueue_script('mksdc-js');
-		wp_enqueue_style('mksdc-style');
+		wp_enqueue_style ('mksdc-style');
 		wp_enqueue_script('select2-js');
-		wp_enqueue_style('select2-css');
+		wp_enqueue_style ('select2-css');
 	}
 
 	/**
