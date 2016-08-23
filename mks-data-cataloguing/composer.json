@@ -1,7 +1,0 @@
-{
-    "require": {
-      "twbs/bootstrap": "v3.3.*"
-    },
-    "scripts": {
-    }
-}
