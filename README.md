@@ -16,6 +16,14 @@ Available licences (redistribution policies) can be edited through another type 
 
 You can also point directly to the dataset by including it as a source file or link, and attach to the dataset a number of services that use or give access to the data in a specific way.
 
+## Licence and attribution
+
+Being a Wordpress plugin, MKS Data Cataloguing inherit the GPL licence from it. It is therefore available here under the GPL v3 licence. 
+
+Whenever making a website that include the MKS Data Cataloguing function in a public way, please include in a visible place (e.g. you "About" page) a setence attributing the source of the plugin and linking back to this repository, e.g.
+
+"This website makes use of the Data Cataloguing plugin developed by the Data Science Group at the Open University (dsg.kmi.open.ac.uk), with contributions from the MK:Smart project (mksmart.org) - see https://github.com/mk-smart/datahub-catalogue/"
+
 ## Compatibility with CKAN API
 
 This is currently being developped and will be made available soon.
