@@ -22,7 +22,7 @@ Being a Wordpress plugin, MKS Data Cataloguing inherit the GPL licence from it. 
 
 Whenever making a website that include the MKS Data Cataloguing function in a public way, please include in a visible place (e.g. you "About" page) a setence attributing the source of the plugin and linking back to this repository, e.g.
 
-"This website makes use of the Data Cataloguing plugin developed by the Data Science Group at the Open University (dsg.kmi.open.ac.uk), with contributions from the MK:Smart project (mksmart.org) - see https://github.com/mk-smart/datahub-catalogue/"
+"This website makes use of the Data Cataloguing plugin developed by the Data Science Group at the Open University (http://dsg.kmi.open.ac.uk), with contributions from the MK:Smart project (http://mksmart.org) - see https://github.com/mk-smart/datahub-catalogue/"
 
 ## Compatibility with CKAN API
 
