@@ -10,8 +10,11 @@ You should have Wordpress running and configure before installing the MKS Data C
 
 ## How to use
 
-...
+Once activited, the MKS Data Cataloging plugin will create a new type of post called "Datasets" available from the right hand side meny of the Wordpress admin interface. This acts like a typical Wordpress posts, which can be described using text, tags and categories. In addition, fields are added that are specific to datasets, including the data owner, format, status, and licences (redistribution policies).
 
+Available licences (redistribution policies) can be edited through another type of post, which can include the text of the licence document, as well as a basic description of its clauses in terms of duties, permissions and prohibitions. 
+
+You can also point directly to the dataset by including it as a source file or link, and attach to the dataset a number of services that use or give access to the data in a specific way.
 
 ## Compatibility with CKAN API
 
