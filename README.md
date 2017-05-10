@@ -15,8 +15,8 @@ Install the MKS Data Cataloguing component:
 
 1. Clone this repository or download ZIP file and unpack it
 2. Install third-party dependencies: 
-2.1. Go to plugin directory: `$ cd mks-data-cataloguing`
-2.2. Run `$ php composer.phar install` or `$ composer install`, depending on how you installed Composer (see its documentation)
+   + Go to plugin directory: `$ cd mks-data-cataloguing`
+   + Run `$ php composer.phar install` or `$ composer install`, depending on how you installed Composer (see its documentation)
 3. Copy the `mks-data-cataloguing` directory to the `wp-content/plugins/` folder of your WordPress installation
 4. Open your WordPress admin dashboard on your Web Browser, select the __Plugins__ menu and activate the __MKS Data Cataloguing__ plugin.
 
