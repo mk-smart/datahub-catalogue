@@ -6,7 +6,7 @@
  Plugin Name: MKS Data Cataloguing
 Plugin URI: http://mksmart.org
 Description: To register datasets and the information related to their import and redistribution in the MK:Smart Datahub
-Version: 1.2-RC1 - 23-03-2016
+Version: 1.2-RC2 - 10-05-2017
 Author: enridaga, mdaquin
 Author URI: http://kmi.open.ac.uk/
 License: Apache 2.0
@@ -221,7 +221,16 @@ class MKSDC_Plugin{
 	private function _initPageTemplates(){
 		$this->_templates = array();
 		// Add a filter to the attributes metabox to inject template into the cache.
-		add_filter( 'page_attributes_dropdown_pages_args', array( $this, 'registerProjectTemplates' ) );
+		// add_filter( 'page_attributes_dropdown_pages_args', array( $this, 'registerProjectTemplates' ) );
+		if ( version_compare( floatval( get_bloginfo( 'version' ) ), '4.7', '<' ) ) {
+			// 4.6 and older
+			add_filter( 'page_attributes_dropdown_pages_args', 
+				array( $this, 'registerProjectTemplates' ) 
+			);
+		} else {
+			// 4.7+ : Add a filter to the wp 4.7 version attributes metabox
+			add_filter( 'theme_page_templates', array( $this, 'addNewTemplates' ) );
+		}
 		// Add a filter to the save post to inject out template into the page cache
 		add_filter( 'wp_insert_post_data', array( $this, 'registerProjectTemplates' ) );
 		// Add a filter to the template include to determine if the page has our
@@ -247,6 +256,15 @@ class MKSDC_Plugin{
 		$existing_mimes['ld'] = 'application/ld+json';
 		
 		return $existing_mimes;
+	}
+
+	/**
+	 * Adds our template to the page dropdown for v4.7+
+	 *
+	 */
+	public function addNewTemplates( $posts_templates ) {
+		$posts_templates = array_merge( $posts_templates, $this->_templates );
+		return $posts_templates;
 	}
 
 	/**
