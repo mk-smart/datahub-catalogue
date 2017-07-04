@@ -1,4 +1,9 @@
-<?php 
+<?php
+/*
+ * Template Name: Data Catalogue Public Page
+ * Description: Template for pages used to list available datasets.
+ */
+
 require_once(dirname(__FILE__) . '/abstract-controller.inc');
 
 class MKSDC_DataCatalogue_Controller extends MKSDC_AbstractController{
