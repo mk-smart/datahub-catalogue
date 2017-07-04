@@ -1,9 +1,9 @@
-<?php 
+<?php
 wp_enqueue_script('post');
 wp_enqueue_script('word-count');
 wp_enqueue_script('editor');
 wp_enqueue_script('media-upload');
-get_header(); 
+get_header();
 ?>
 <article id="post-<?php print the_ID(); ?>"
 	class="page type-page status-publish entry page-dataset">
@@ -35,16 +35,19 @@ get_header();
 							<?php $this->partial('wizard-buttons', array('next'=>true,'prev'=>true, 'cancel'=>array('href'=>home_url()))); ?>
 						</div>
 						<?php */?>
+						<?php /* Only when dataset type is 'file' */ ?>
+						<?php if($this->get('managedType') == 'file'): ?>
 						<div class="tab-pane fade in" id="ds-upload">
 							<?php $this->partial('edit-upload', $this->getAll()); ?>
 							<?php $this->partial('wizard-buttons', array('next'=>true,'prev'=>true, 'cancel'=>array('href'=>home_url()))); ?>
 						</div>
+					  <?php endif; ?>
 						<!-- Other tabs here -->
 						<?php /* Extend the Edit Dataset View with the 'dataset-edit-tab-content' extension */
-						$extensionsNumber = count(MKSDC_Plugin::instance()->getExtensions('dataset-edit-tab')); 
+						$extensionsNumber = count(MKSDC_Plugin::instance()->getExtensions('dataset-edit-tab'));
 						foreach(MKSDC_Plugin::instance()->getExtensions('dataset-edit-tab') as $extension): ?>
 							<?php unset($v); ?>
-							<?php if(is_array(@$extension) && @is_object(@$extension[0])): 
+							<?php if(is_array(@$extension) && @is_object(@$extension[0])):
 								$o = $extension[0];
 							    $v = $o->$extension[1](); ?>
 							<?php elseif(function_exists($extension)):
@@ -56,7 +59,7 @@ get_header();
 							<div class="tab-pane fade in" id="ds-<?php print $tabId; ?>">
 							<?php foreach(MKSDC_Plugin::instance()->getExtensions('dataset-edit-tab-content') as $extension): ?>
 							<?php unset($v); ?>
-							<?php if(is_array(@$extension) && @is_object(@$extension[0])): 
+							<?php if(is_array(@$extension) && @is_object(@$extension[0])):
 								$o = $extension[0];
 							    $o->$extension[1]($tabId, $this->getAll()); ?>
 							<?php elseif(function_exists($extension)):

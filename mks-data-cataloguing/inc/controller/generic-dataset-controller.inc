@@ -1,12 +1,17 @@
 <?php
 require_once (dirname ( __FILE__ ) . '/abstract-controller.inc');
-class MKSDC_Generic_Dataset_Controller extends MKSDC_AbstractController {
+abstract class MKSDC_Generic_Dataset_Controller extends MKSDC_AbstractController {
+
+	/** Override in other dataset types **/
+	abstract protected function _managedType();
+
 	public function __construct($args) {
 		if (session_id () == '') {
 			session_start ();
 		}
 		parent::__construct ( $args );
 	}
+
 
 	private function _checkLoggedIn() {
 		if (! is_user_logged_in ()) {
@@ -65,6 +70,7 @@ class MKSDC_Generic_Dataset_Controller extends MKSDC_AbstractController {
 		// Prepare a new empty Dataset
 		$model = array();
 		$model['licence'] = array();
+		$model['managedType'] = $this->_managedType();
 		$view = new MVC_Html($model);
 		$view->render('new-dataset');
 	}
@@ -204,6 +210,9 @@ class MKSDC_Generic_Dataset_Controller extends MKSDC_AbstractController {
 				$data['mksdc_sources_field'][$ix]['file'] = $value['file']; // Just show the name.
 			}
 		}
+
+		// The managed type does not depend on the html post data but on the class used (page template)
+		$data['managedType'] = $this->_managedType();
 //		print_r($data); die;
 		return $data;
 	}
@@ -243,7 +252,13 @@ class MKSDC_Generic_Dataset_Controller extends MKSDC_AbstractController {
 		$model['mksdc_nds_source_link'] = $model['source']['link'];
 		$model ['mksdc_nds_attribution'] = $model ['attribution'];
 		$model['mksdc_services_field'] = $model ['services'];
-		$model['mksdc_sources_field'] = $model['sources'];
+
+		if($this->_managedType() == 'file'){
+			$model['mksdc_sources_field'] = $model['sources'];
+		}
+
+		// The managed type does not depend on the html post data but on the class used (page template)
+		$data['managedType'] = $this->_managedType();
 		return $model;
 	}
 
@@ -280,17 +295,19 @@ class MKSDC_Generic_Dataset_Controller extends MKSDC_AbstractController {
 		}
 		$data['mksdc_attribution_field'] = $_POST['mksdc_nds_attribution'];
 
-		// Prepare Sources
-		$data['mksdc_sources_field'] = array();
-		$files_keys = array('name','type','tmp_name','error','size');
-		if(isset($_POST['mksdc_sources_field'] )){
-			foreach($_POST['mksdc_sources_field'] as $index => $source){
-				foreach($files_keys as $key){
-					if(isset($_FILES['mksdc_sources_field'][$key][$index])){
-						$source['file'][$key] = $_FILES['mksdc_sources_field'][$key][$index]['file'];
+		// Prepare Sources (only for datasets of type 'file')
+		if($this->_managedType() == 'file'){
+			$data['mksdc_sources_field'] = array();
+			$files_keys = array('name','type','tmp_name','error','size');
+			if(isset($_POST['mksdc_sources_field'] )){
+				foreach($_POST['mksdc_sources_field'] as $index => $source){
+					foreach($files_keys as $key){
+						if(isset($_FILES['mksdc_sources_field'][$key][$index])){
+							$source['file'][$key] = $_FILES['mksdc_sources_field'][$key][$index]['file'];
+						}
 					}
+					$data['mksdc_sources_field'][$index] = $source;
 				}
-				$data['mksdc_sources_field'][$index] = $source;
 			}
 		}
 		return $data;

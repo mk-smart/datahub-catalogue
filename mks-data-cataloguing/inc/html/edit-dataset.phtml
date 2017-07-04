@@ -1,9 +1,9 @@
-<?php 
+<?php
 wp_enqueue_script('post');
 wp_enqueue_script('word-count');
 wp_enqueue_script('editor');
 wp_enqueue_script('media-upload');
-get_header(); 
+get_header();
 //wp_tiny_mce();
 ?>
 <article id="post-<?php print get_the_ID(); ?>"
@@ -32,17 +32,22 @@ get_header();
 							<?php $this->partial('edit-licence', $this->getAll()); ?>
 							<?php $this->partial('wizard-buttons', array('next'=>true,'prev'=>true,'save'=>true,'cancel'=>true)); ?>
 						</div>
+
+						<?php /* Only when dataset type is 'file' */ ?>
+						<?php if($this->get('managedType') == 'file'): ?>
 						<div class="tab-pane fade in" id="ds-upload">
 							<?php $this->partial('edit-upload', $this->getAll()); ?>
 							<?php $this->partial('wizard-buttons', array('next'=>true,'prev'=>true,'save'=>true,'cancel'=>true)); ?>
 						</div>
+					  <?php endif; ?>
+
 						<!-- div class="tab-pane fade in" id="ds-data"></div -->
 						<!-- Other tabs here -->
 						<?php /* Extend the Edit Dataset View with the 'dataset-edit-tab-content' extension */
-						$extensionsNumber = count(MKSDC_Plugin::instance()->getExtensions('dataset-edit-tab')); 
+						$extensionsNumber = count(MKSDC_Plugin::instance()->getExtensions('dataset-edit-tab'));
 						foreach(MKSDC_Plugin::instance()->getExtensions('dataset-edit-tab') as $extension): ?>
 							<?php unset($v); ?>
-							<?php if(is_array(@$extension) && @is_object(@$extension[0])): 
+							<?php if(is_array(@$extension) && @is_object(@$extension[0])):
 								$o = $extension[0];
 							    $v = $o->$extension[1](); ?>
 							<?php elseif(function_exists($extension)):
@@ -54,7 +59,7 @@ get_header();
 							<div class="tab-pane fade in" id="ds-<?php print $tabId; ?>">
 							<?php foreach(MKSDC_Plugin::instance()->getExtensions('dataset-edit-tab-content') as $extension): ?>
 							<?php unset($v); ?>
-							<?php if(is_array(@$extension) && @is_object(@$extension[0])): 
+							<?php if(is_array(@$extension) && @is_object(@$extension[0])):
 								$o = $extension[0];
 							    $o->$extension[1]($tabId, $this->getAll()); ?>
 							<?php elseif(function_exists($extension)):
