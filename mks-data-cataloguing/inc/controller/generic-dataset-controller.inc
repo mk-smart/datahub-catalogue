@@ -70,7 +70,7 @@ abstract class MKSDC_Generic_Dataset_Controller extends MKSDC_AbstractController
 		// Prepare a new empty Dataset
 		$model = array();
 		$model['licence'] = array();
-		$model['managedType'] = $this->_managedType();
+		$model['mksdc_managed_type'] = $this->_managedType();
 		$view = new MVC_Html($model);
 		$view->render('new-dataset');
 	}
@@ -213,7 +213,7 @@ abstract class MKSDC_Generic_Dataset_Controller extends MKSDC_AbstractController
 		}
 
 		// The managed type does not depend on the html post data but on the class used (page template)
-		$data['managedType'] = $this->_managedType();
+		$data['mksdc_managed_type'] = $this->_managedType();
 //		print_r($data); die;
 		return $data;
 	}
