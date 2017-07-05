@@ -299,7 +299,7 @@ class MKSDC_DataAccess{
 							MKSDC_Plugin::logErr('Cannot delete attachment ' . $source['attachment_id']);
 						}else{
 							// Succesfully delete. Let's remove the item from the array
-							unset($data[self::toField('sources')][$sourceIndex]); 
+							unset($data[self::toField('sources')][$sourceIndex]);
 						}
 					}
 				} else
@@ -315,9 +315,9 @@ class MKSDC_DataAccess{
 				// C) If it is a new file
 				if(isset($source['file'])){
 					// Upload the file and change the data
-	
+
 					$uploaded = wp_upload_bits( $source['file']['name'], null, @file_get_contents( $source['file']['tmp_name'] ) );
-	
+
 					if ( FALSE === $uploaded['error'] ) {
 						MKSDC_Plugin::log('Uploaded file ' . $uploaded['file']);
 						$filetype = wp_check_filetype( basename( $uploaded['file'] ), null );
@@ -342,6 +342,9 @@ class MKSDC_DataAccess{
 			// Update metadata
 			$this->saveCustomFieldArray($post_id, 'sources', $data);
 		}
+
+		// Dataset Managed Type
+		$this->saveCustomField($post_id, 'managed_type', $data);
 		return $post_id;
 	}
 
@@ -361,7 +364,7 @@ class MKSDC_DataAccess{
 	}
 
 	public function saveDataset($data, $updating = false){
-		
+
 		if ($updating) {
 			$post_id = wp_update_post($data);
 		} else {
@@ -375,7 +378,7 @@ class MKSDC_DataAccess{
 		MKSDC_Plugin::log("Saved dataset with post_id: " . $post_id);
 		return $post_id;
 	}
-	
+
 	/**
 	 * @param int $post_id
 	 * @return array
@@ -480,7 +483,7 @@ class MKSDC_DataAccess{
 		}
 		return $sources;
 	}
-	
+
 	public function getServices($post_id){
 		$services = array();
 		// Services configured from the admin interface
