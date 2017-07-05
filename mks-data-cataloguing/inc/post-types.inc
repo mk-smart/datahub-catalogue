@@ -53,7 +53,7 @@ register_post_type( 'mksdc-policies', $mksdc_pt);
 
 /**
  * To close comments on post type mksdc-datasets and mksdc-policies
- * 
+ *
  * @param array $posts
  * @return array
  */
@@ -73,9 +73,9 @@ add_filter( 'the_posts', 'mksdc_close_comments' );
 
 function mksdc_get_custom_post_type_template($single_template) {
 	global $post;
-
 	if ($post->post_type == 'mksdc-datasets') {
-		$single_template = dirname( __FILE__ ) . '/controller/dataset.inc';
+		$plugin = MKSDC_Plugin::instance();
+		$single_template = $plugin->getDatasetPageTemplate($post->ID);
 	}
 	return $single_template;
 }

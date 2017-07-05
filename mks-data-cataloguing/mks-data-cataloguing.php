@@ -38,7 +38,7 @@ class MKSDC_Plugin{
 
 	/**
 	 * Extension points
-	 * 
+	 *
 	 * @var unknown
 	 */
 	protected $_extensions;
@@ -46,7 +46,7 @@ class MKSDC_Plugin{
 	const DATA_CATALOGUE_TMPL = 'inc/controller/data-catalogue.inc';
 	const DATASET_TMPL = 'inc/controller/dataset.inc';
 	const API_TMPL = 'inc/controller/api.inc';
-	
+
 	/**
 	 * Messages are logged only if in debug mode
 	 */
@@ -55,14 +55,14 @@ class MKSDC_Plugin{
 			error_log("MKSDC " . implode(' ', func_get_args()));
 		}
 	}
-	
+
 	public static function templateDirectory(){
 		return dirname(__FILE__) . '/inc/html';
 	}
-	
+
 	/**
 	 * Errors are always logged
-	 * 
+	 *
 	 * @param string $m
 	 * @param Exception $e
 	 */
@@ -83,11 +83,11 @@ class MKSDC_Plugin{
 	public static function getRDFCatApiKey(){
 		return get_option('mksdc_rdfcat_key');
 	}
-	
+
 	public static function getLinkedDataURI($local=""){
 		return "http://datahub.mksmart.org/ns/$local";
 	}
-	
+
 	public static function getPostFromLinkedDataURI($uri){
 		if(strpos($uri, self::getLinkedDataURI('dataset/')) === 0 ){
 			// this is a dataset
@@ -106,16 +106,16 @@ class MKSDC_Plugin{
 	public static function getDataCatalogueLink(array $params = array()){
 		return self::getPageFromTemplate(self::DATA_CATALOGUE_TMPL, $params);
 	}
-	
+
 	public static function getDatasetApiLink($name){
 		$params = array('action' => 'dataset', 'name'=> $name);
 		return self::getApiLink($params);
 	}
-	
+
 	public static function getApiLink(array $params = array()){
 		return self::getPageFromTemplate(self::API_TMPL, $params);
 	}
-	
+
 	private static function extendLink($link, array $qsparams = array()){
 		if(count($qsparams) == 0){
 			return $link;
@@ -125,7 +125,7 @@ class MKSDC_Plugin{
 		}else{
 			$link = $link . '?';
 		}
-		
+
 		$pars = array();
 		foreach($qsparams as $par => $val){
 			array_push($pars, $par . '=' . urlencode($val));
@@ -133,7 +133,7 @@ class MKSDC_Plugin{
 		$querystring = join('&', $pars);
 		return $link . $querystring;
 	}
-	
+
 	public static function getPageFromTemplate($tmpl, array $qsparams = array()){
 		$pages = get_pages(array(
 				'meta_key' => '_wp_page_template',
@@ -144,14 +144,14 @@ class MKSDC_Plugin{
 			$link = get_page_link($afp->ID);
 			break;
 		}
-		
+
 		if($link == NULL){
 			return FALSE;
 		}
-		
+
 		return self::extendLink($link, $qsparams);
 	}
-	
+
 	public function __construct(){
 		add_action('init', array($this, 'init'));
 		add_filter('upload_mimes', array($this, 'registerCustomMediaTypes'));
@@ -160,10 +160,10 @@ class MKSDC_Plugin{
 	// Init: create taxonomies and custom post type
 	public function init() {
 		try{
-			
+
 			// Include Settings for admin panel
 			include(dirname(__FILE__) . '/inc/settings.inc' );
-			
+
 			// Include custom data items, UI objects and save action
 			require_once dirname(__FILE__) . '/inc/custom-data.inc';
 
@@ -178,13 +178,13 @@ class MKSDC_Plugin{
 
 			// Activate RDF catalogue notifier
 			require_once dirname(__FILE__) . '/inc/rdf-catalogue-notifier.inc';
-				
+
 			// Register with hook 'wp_enqueue_scripts', which can be used for front end CSS and JavaScript
 			add_action( 'wp_print_scripts', array($this, 'add_scripts' ));
 
 			// Register custom shortcodes
 			require_once dirname(__FILE__) . '/inc/shortcodes.inc';
-				
+
 			// Init page templates
 			$this->_initPageTemplates();
 
@@ -200,14 +200,14 @@ class MKSDC_Plugin{
 		// Bootstrap
 
 		wp_register_script('bootstrap', plugins_url('/vendor/twbs/bootstrap/dist/js/bootstrap.min.js', __FILE__), array('jquery'));
-		wp_register_style ('bootstrap', plugins_url('/vendor/twbs/bootstrap/dist/css/bootstrap.min.css', __FILE__));		
+		wp_register_style ('bootstrap', plugins_url('/vendor/twbs/bootstrap/dist/css/bootstrap.min.css', __FILE__));
 		wp_register_script('mksdc-js', plugins_url('/js/mksdc.js', __FILE__), array('jquery'));
 		wp_register_style ('mksdc-style', plugins_url('/css/mksdc.css', __FILE__));
 		wp_register_script('select2-js', '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js', array('jquery'));
 		wp_register_style ('select2-css', '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css');
 
 		wp_enqueue_script('bootstrap');
-		wp_enqueue_style ('bootstrap');		
+		wp_enqueue_style ('bootstrap');
 		wp_enqueue_script('mksdc-js');
 		wp_enqueue_style ('mksdc-style');
 		wp_enqueue_script('select2-js');
@@ -216,7 +216,7 @@ class MKSDC_Plugin{
 
 	/**
 	 * Initialize page templates
-	 * 
+	 *
 	 */
 	private function _initPageTemplates(){
 		$this->_templates = array();
@@ -224,8 +224,8 @@ class MKSDC_Plugin{
 		// add_filter( 'page_attributes_dropdown_pages_args', array( $this, 'registerProjectTemplates' ) );
 		if ( version_compare( floatval( get_bloginfo( 'version' ) ), '4.7', '<' ) ) {
 			// 4.6 and older
-			add_filter( 'page_attributes_dropdown_pages_args', 
-				array( $this, 'registerProjectTemplates' ) 
+			add_filter( 'page_attributes_dropdown_pages_args',
+				array( $this, 'registerProjectTemplates' )
 			);
 		} else {
 			// 4.7+ : Add a filter to the wp 4.7 version attributes metabox
@@ -243,7 +243,7 @@ class MKSDC_Plugin{
 			self::DATASET_TMPL => 'New Dataset Page',
 		);
 	}
-	
+
 	public function registerCustomMediaTypes( $existing_mimes = array()){
 		// Added to extend allowed files types in Media upload
 		$existing_mimes['csv'] = 'text/csv';
@@ -254,7 +254,7 @@ class MKSDC_Plugin{
 		$existing_mimes['nt'] = 'text/plain';
 		$existing_mimes['n3'] = 'text/rdf+n3';
 		$existing_mimes['ld'] = 'application/ld+json';
-		
+
 		return $existing_mimes;
 	}
 
@@ -313,6 +313,23 @@ class MKSDC_Plugin{
 
 	}
 
+	public function getDatasetPageTemplate($post_id){
+		$template = dirname( __FILE__ ) . '/inc/controller/dataset.inc';
+		foreach(MKSDC_Plugin::instance()->getExtensions('template') as $extension):
+			if(is_array(@$extension) && @is_object(@$extension[0])):
+				$o = $extension[0];
+					$v = $o->$extension[1]($post_id);
+			elseif(function_exists($extension)):
+				$v = $extension($post_id);
+			endif;
+			if($v){
+				$template = $v;
+			}
+		endforeach;
+		MKSDC_Plugin::log('Dataset Page Template: ',$post_id, ' :: ', $template);
+		return $template;
+	}
+
 	/**
 	 * Returns an instance of this class.
 	 */
@@ -332,31 +349,33 @@ class MKSDC_Plugin{
 	 * <li> dataset-render : to contribute to the display of a dataset
 	 * <li> dataset-edit-tab: to contribute a new tab to the edit dataset page
 	 * <li> dataset-edit-tab-content : to contribute a panel to the edit dataset page
+	 * <li> template: to select an alternative template for the msdc-dataset post type
 	 * </ul>
-	 * 
+	 *
 	 * Ext must be a function name or an array(obj,methodName):
 	 * <ul>
-	 * <li> dataset : expecting the dataset post_id as argument 
+	 * <li> dataset : expecting the dataset post_id as argument
 	 * <li> service : expecting the dataset post_id as argument
 	 * <li> private : no parameter expected
 	 * <li> dataset-render : expects dataset data as input, prints some HTML that is injected in the dataset view.
-	 * <li> dataset-edit-tab : no parameter is expected. 
+	 * <li> dataset-edit-tab : no parameter is expected.
 	 * Must return an array of three elements: [0] tab id [1] tab label [2] glyphicon icon name
 	 * <li> dataset-edit-tab-content : expects a tabId as first parameter and the dataset data as second. Prints HTML to be injected in the edit dataset page.
+	 * <li> template : expecting the dataset post_id as argument
 	 * </ul>
-	 * 
+	 *
 	 * @param string $point - functionality to extend
 	 * @param string $name - id of the exntension
 	 * @param mixed $ext - function to run or array($obj,$methodName)
 	 */
-	public function registerExtension($point, $name, $ext){ 
+	public function registerExtension($point, $name, $ext){
 		$this->_extensions[$point][$name] = $ext;
 	}
-	
+
 	public function unregisterExtension($point, $name){
 		unset($this->_extensions[$point][$name]);
 	}
-	
+
 	public function getExtensions($point){
 		if(isset($this->_extensions[$point])){
 			return $this->_extensions[$point];
