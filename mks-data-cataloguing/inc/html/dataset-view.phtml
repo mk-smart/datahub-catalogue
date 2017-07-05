@@ -1,9 +1,9 @@
 <?php get_header(); ?>
 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
 <aside id="aside" role="complementary">
-<h1>Information</h1>			
+<h1>Information</h1>
 <div class="textwidget">
-<!-- Extensions HERE -->
+  <!-- Extensions HERE -->
 	<?php
 	$p = MKSDC_Plugin::instance();
 	$extensions = $p->getExtensions('dataset-render');
@@ -92,7 +92,7 @@
 
 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
 <section role="main">
-<article id="post-<?php print get_the_ID(); ?>" 
+<article id="post-<?php print get_the_ID(); ?>"
 class="post-<?php print get_the_ID(); ?> page type-page status-publish hentry <?php print ($this->get('isPrivate', FALSE))?"private-dataset":"public-dataset";?>">
 <div class="alignright"></div>
 <header class="header">
@@ -113,25 +113,9 @@ class="post-<?php print get_the_ID(); ?> page type-page status-publish hentry <?
 	</section>
 <?php endif; ?>
 
-<?php if(@$this->full('services')): ?>
-	<hr/>
-	<section class="entry-services">
-	<?php foreach(@$this->get('services', array()) as $service): ?>
-		<div class="mksdc-dataset-service" style="<?php echo $style; ?>">
-    		<h4><?php print @$service['title']; ?>:
-				<div class="btn-group btn-group-sm mksdc-dataset-actions pull-right">
-					<?php foreach(@$service['actions'] as $action): ?>
-						<a class="btn btn-flat btn-<?php print $action['type']; ?>" href="<?php print do_shortcode($action['link']); ?>"><?php print $action['label']; ?></a>
-					<?php endforeach; ?>
-				</div>
-			</h4>
-		</div>
-	<?php endforeach; ?>
-	</section>
-  <?php endif; ?>
   <?php if(@$this->full('sources')): ?>
 	<hr/>
-	
+
 	<section class="entry-sources">
 		<?php foreach(@$this->get('sources', array()) as $source): ?>
 			<div class="mksdc-dataset-source">
@@ -153,5 +137,40 @@ class="post-<?php print get_the_ID(); ?> page type-page status-publish hentry <?
 		</section>
   <?php endif; ?>
 
+	<!-- Extensions to Dataset-View HERE -->
+	<?php
+	$p = MKSDC_Plugin::instance();
+	$extensions = $p->getExtensions('dataset-view-section');
+
+	$subviews = array();
+	foreach($extensions as $key => $ext){
+		if(is_array($ext)){
+			$obj = $ext[0];
+			$met = $ext[1];
+			print $obj->$met($this->getAll());
+		}elseif(function_exists($ext)){
+			print $ext($this->getAll(), '');
+		}
+	}
+	?>
+	<!-- End Extensions -->
+
+
+	<?php if(@$this->full('services')): ?>
+		<hr/>
+		<section class="entry-services">
+		<?php foreach(@$this->get('services', array()) as $service): ?>
+			<div class="mksdc-dataset-service" style="<?php echo $style; ?>">
+	    		<h4><?php print @$service['title']; ?>:
+					<div class="btn-group btn-group-sm mksdc-dataset-actions pull-right">
+						<?php foreach(@$service['actions'] as $action): ?>
+							<a class="btn btn-flat btn-<?php print $action['type']; ?>" href="<?php print do_shortcode($action['link']); ?>"><?php print $action['label']; ?></a>
+						<?php endforeach; ?>
+					</div>
+				</h4>
+			</div>
+		<?php endforeach; ?>
+		</section>
+	  <?php endif; ?>
 </article></section></div>
 <?php get_footer(); ?>
