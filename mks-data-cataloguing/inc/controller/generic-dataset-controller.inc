@@ -115,6 +115,7 @@ abstract class MKSDC_Generic_Dataset_Controller extends MKSDC_AbstractController
 	}
 
 	public function editAction() {
+		MKSDC_Plugin::log('editing managed type ', $this->_managedType());
 		// Only for logged in users
 		$this->_checkLoggedIn ();
 		if(!$this->_userCanEdit()){
@@ -258,7 +259,7 @@ abstract class MKSDC_Generic_Dataset_Controller extends MKSDC_AbstractController
 		}
 
 		// The managed type does not depend on the html post data but on the class used (page template)
-		$data['managedType'] = $this->_managedType();
+		$model['mksdc_managed_type'] = $this->_managedType();
 		return $model;
 	}
 
@@ -294,6 +295,9 @@ abstract class MKSDC_Generic_Dataset_Controller extends MKSDC_AbstractController
 			}
 		}
 		$data['mksdc_attribution_field'] = $_POST['mksdc_nds_attribution'];
+
+		// Dataset Managed Type
+		$data['mksdc_managed_type_field'] = $this->_managedType();
 
 		// Prepare Sources (only for datasets of type 'file')
 		if($this->_managedType() == 'file'){
