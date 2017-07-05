@@ -3,19 +3,19 @@
 	<li><a href="#ds-licence" data-toggle="tab"><span class="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span>&nbsp;Ownership and licencing</a></li>
 
 	<?php /* Only when dataset type is 'file' */ ?>
-	<?php if($this->get('managedType') == 'file'): ?>
+	<?php if($this->get('mksdc_managed_type') == 'file'): ?>
 	<li><a href="#ds-upload" data-toggle="tab"><span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>&nbsp;Sources</a></li>
   <?php endif; ?>
-	
+
 	<?php /* Extend the Edit Dataset View with the 'dataset-edit-tab' extension */ ?>
 	<?php // Remember tab ids ?>
 	<?php foreach(MKSDC_Plugin::instance()->getExtensions('dataset-edit-tab') as $extension): ?>
 	<?php unset($v); ?>
 	<?php if(is_array(@$extension) && @is_object(@$extension[0])):
 		$o = $extension[0];
-		$v = $o->$extension[1](); ?>
+		$v = $o->$extension[1]($this->get('mksdc_managed_type')); ?>
 	<?php elseif(function_exists($extension)):
-		$v = $extension(); ?>
+		$v = $extension($this->get('mksdc_managed_type')); ?>
 	<?php endif; ?>
 	<?php if($v): ?>
 		<li><a href="#ds-<?php print $v[0]?>" data-toggle="tab"><span class="glyphicon glyphicon-<?php print $v[2];?>" aria-hidden="true"></span>&nbsp;<?php print $v[1];?></a></li>

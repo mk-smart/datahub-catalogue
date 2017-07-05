@@ -36,7 +36,8 @@ get_header();
 						</div>
 						<?php */?>
 						<?php /* Only when dataset type is 'file' */ ?>
-						<?php if($this->get('managedType') == 'file'): ?>
+						Pippo
+						<?php if($this->get('mksdc_managed_type') == 'file'): ?>
 						<div class="tab-pane fade in" id="ds-upload">
 							<?php $this->partial('edit-upload', $this->getAll()); ?>
 							<?php $this->partial('wizard-buttons', array('next'=>true,'prev'=>true, 'cancel'=>array('href'=>home_url()))); ?>
