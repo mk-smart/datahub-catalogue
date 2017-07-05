@@ -35,8 +35,8 @@ get_header();
 							<?php $this->partial('wizard-buttons', array('next'=>true,'prev'=>true, 'cancel'=>array('href'=>home_url()))); ?>
 						</div>
 						<?php */?>
+
 						<?php /* Only when dataset type is 'file' */ ?>
-						Pippo
 						<?php if($this->get('mksdc_managed_type') == 'file'): ?>
 						<div class="tab-pane fade in" id="ds-upload">
 							<?php $this->partial('edit-upload', $this->getAll()); ?>
@@ -50,9 +50,9 @@ get_header();
 							<?php unset($v); ?>
 							<?php if(is_array(@$extension) && @is_object(@$extension[0])):
 								$o = $extension[0];
-							    $v = $o->$extension[1](); ?>
+							    $v = $o->$extension[1]($this->get('mksdc_managed_type')); ?>
 							<?php elseif(function_exists($extension)):
-								$v = $extension(); ?>
+								$v = $extension($this->get('mksdc_managed_type')); ?>
 							<?php endif; ?>
 							<?php if($v){
 								$tabId = $v[0];
