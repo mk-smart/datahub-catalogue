@@ -346,10 +346,11 @@ class MKSDC_Plugin{
 	 * <li> dataset : to add data to a dataset description
 	 * <li> service : to add a service to a dataset description
 	 * <li> private : to provide a list of private datasets (UUIDs)
-	 * <li> dataset-render : to contribute to the display of a dataset
+	 * <li> dataset-render : to contribute to the display of a dataset (summary box on the left)
 	 * <li> dataset-edit-tab: to contribute a new tab to the edit dataset page
 	 * <li> dataset-edit-tab-content : to contribute a panel to the edit dataset page
 	 * <li> template: to select an alternative template for the msdc-dataset post type
+	 * <li> dataset-view-section: to contribute to the display of a dataset (within the page content, before services)
 	 * </ul>
 	 *
 	 * Ext must be a function name or an array(obj,methodName):
@@ -362,6 +363,7 @@ class MKSDC_Plugin{
 	 * Must return an array of three elements: [0] tab id [1] tab label [2] glyphicon icon name
 	 * <li> dataset-edit-tab-content : expects a tabId as first parameter and the dataset data as second. Prints HTML to be injected in the edit dataset page.
 	 * <li> template : expecting the dataset post_id as argument
+	 * <li> dataset-view-section : expecting the view data, can echo or return string.
 	 * </ul>
 	 *
 	 * @param string $point - functionality to extend
