@@ -10,6 +10,7 @@
 
 	$subviews = array();
 	foreach($extensions as $key => $ext){
+		ob_start();
 		if(is_array($ext)){
 			$obj = $ext[0];
 			$met = $ext[1];
@@ -17,10 +18,16 @@
 		}elseif(function_exists($ext)){
 			print $ext($this->getAll(), '');
 		}
+		$ob = ob_get_flush();
+		if(trim($ob) != ''){
+			print trim($ob);
+			?><div class="feed"></div><?php
+		}
+		?><?php
 	}
 	?>
 	<!-- End Extensions -->
-	<div class="feed"></div>
+	<!-- <div class="feed"></div> -->
 				<?php if($this->full('categories')): ?>
 					<p><strong>Categories:</strong>
 						<?php foreach($this->get('categories', array()) as $tag): ?>
