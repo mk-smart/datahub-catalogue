@@ -167,7 +167,7 @@ class="post-<?php print get_the_ID(); ?> page type-page status-publish hentry <?
 		<hr/>
 		<section class="entry-services">
 		<?php foreach(@$this->get('services', array()) as $service): ?>
-			<div class="mksdc-dataset-service" style="<?php echo $style; ?>">
+			<div class="mksdc-dataset-service" style="<?php print @$service['style']; ?>">
 	    		<h4><?php print @$service['title']; ?>:
 					<div class="btn-group btn-group-sm mksdc-dataset-actions pull-right">
 						<?php foreach(@$service['actions'] as $action): ?>
