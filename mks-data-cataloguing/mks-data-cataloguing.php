@@ -6,7 +6,7 @@
  Plugin Name: MKS Data Cataloguing
 Plugin URI: http://mksmart.org
 Description: To register datasets and the information related to their import and redistribution in the MK:Smart Datahub
-Version: 1.2-RC2 - 10-05-2017
+Version: 1.3 - 11-07-2017
 Author: enridaga, mdaquin
 Author URI: http://kmi.open.ac.uk/
 License: Apache 2.0
