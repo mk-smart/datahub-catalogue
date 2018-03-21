@@ -21,7 +21,8 @@ $mksdc_pt = array(
 		'supports' => array('title',
 				'editor',
 				//'comments',
-				'revisions'
+				'revisions',
+				'author'
 		)
 );
 register_post_type( 'mksdc-datasets', $mksdc_pt);
